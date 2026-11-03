@@ -55,7 +55,7 @@ def path_exists(token: str) -> bool:
 
 def scheme_exists(name: str) -> bool:
     scheme = (
-        REPO / "MixStack.xcodeproj" / "xcshareddata" / "xcschemes" / f"{name}.xcscheme"
+        REPO / "StudioBuddy.xcodeproj" / "xcshareddata" / "xcschemes" / f"{name}.xcscheme"
     )
     return scheme.is_file()
 

@@ -1,7 +1,7 @@
 import XCTest
 
-/// Automated WCAG regression checks for core MixStack screens.
-final class WCAGAccessibilityUITests: MixStackUITestCase {
+/// Automated WCAG regression checks for core Studio Buddy screens.
+final class WCAGAccessibilityUITests: StudioBuddyUITestCase {
     func testLibraryPassesAccessibilityAudits() {
         let app = launchApp()
         XCTAssertTrue(app.navigationBars["Library"].waitForExistence(timeout: timeout))

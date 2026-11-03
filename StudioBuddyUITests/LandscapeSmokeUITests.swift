@@ -1,6 +1,6 @@
 import XCTest
 
-final class LandscapeSmokeUITests: MixStackUITestCase {
+final class LandscapeSmokeUITests: StudioBuddyUITestCase {
     func testLibraryRemainsUsableInLandscape() {
         let app = launchApp()
         rotateToLandscapeLeft(app: app)

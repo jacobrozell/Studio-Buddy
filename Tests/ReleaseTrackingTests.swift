@@ -1,5 +1,5 @@
 import Testing
-@testable import MixStack
+@testable import StudioBuddy
 
 @Suite("Release URL validation")
 struct ReleaseURLValidatorTests {

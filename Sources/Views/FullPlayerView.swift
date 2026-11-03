@@ -118,12 +118,11 @@ struct FullPlayerView: View {
     /// (e.g. mixes added before waveform support).
     private func ensureWaveform() {
         guard let mix = audioPlayer.currentMix, !mix.hasWaveform else { return }
-        let mixID = mix.persistentModelID
+        let mixID = mix.id
         let url = mix.fileURL
         Task { @MainActor in
             let peaks = await WaveformGenerator.generate(url: url)
-            guard !peaks.isEmpty,
-                  let mix = modelContext.model(for: mixID) as? Mix else { return }
+            guard !peaks.isEmpty, let mix = modelContext.existingMix(id: mixID) else { return }
             mix.waveform = peaks
         }
     }

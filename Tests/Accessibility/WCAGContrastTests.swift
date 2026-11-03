@@ -3,7 +3,7 @@ import Testing
 #if canImport(UIKit)
 import UIKit
 #endif
-@testable import MixStack
+@testable import StudioBuddy
 
 @Suite("WCAG contrast", .tags(.accessibility))
 struct WCAGContrastTests {

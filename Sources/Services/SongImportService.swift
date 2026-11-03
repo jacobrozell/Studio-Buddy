@@ -10,8 +10,8 @@ struct ImportOutcome: Sendable, Equatable {
 /// waveform and metadata work. Shared by the library importer and demo seeding.
 enum SongImportService {
     private struct PendingBackgroundWork {
-        let songID: PersistentIdentifier?
-        let mixID: PersistentIdentifier
+        let songID: UUID?
+        let mixID: UUID
         let fileURL: URL
         let analyzeSong: Bool
     }
@@ -63,8 +63,8 @@ enum SongImportService {
                     role: item.role
                 )
                 pending.append(PendingBackgroundWork(
-                    songID: song.persistentModelID,
-                    mixID: mix.persistentModelID,
+                    songID: song.id,
+                    mixID: mix.id,
                     fileURL: mix.fileURL,
                     analyzeSong: true
                 ))
@@ -81,7 +81,7 @@ enum SongImportService {
                 )
                 pending.append(PendingBackgroundWork(
                     songID: nil,
-                    mixID: mix.persistentModelID,
+                    mixID: mix.id,
                     fileURL: mix.fileURL,
                     analyzeSong: false
                 ))
@@ -134,22 +134,22 @@ enum SongImportService {
 
     @MainActor
     private static func scheduleWaveformGeneration(
-        mixID: PersistentIdentifier, fileURL: URL, context: ModelContext
+        mixID: UUID, fileURL: URL, context: ModelContext
     ) {
         Task { @MainActor in
             let peaks = await WaveformGenerator.generate(url: fileURL)
-            guard !peaks.isEmpty, let mix = context.model(for: mixID) as? Mix else { return }
+            guard !peaks.isEmpty, let mix = context.existingMix(id: mixID) else { return }
             mix.waveform = peaks
         }
     }
 
     @MainActor
     private static func scheduleLoudnessAnalysis(
-        mixID: PersistentIdentifier, fileURL: URL, context: ModelContext
+        mixID: UUID, fileURL: URL, context: ModelContext
     ) {
         Task { @MainActor in
             guard let lufs = await LoudnessAnalyzer.estimateIntegratedLUFS(url: fileURL),
-                  let mix = context.model(for: mixID) as? Mix else { return }
+                  let mix = context.existingMix(id: mixID) else { return }
             mix.integratedLUFS = lufs
             mix.loudnessAnalyzedAt = .now
         }
@@ -157,11 +157,11 @@ enum SongImportService {
 
     @MainActor
     private static func scheduleMetadataDetection(
-        songID: PersistentIdentifier, fileURL: URL, context: ModelContext
+        songID: UUID, fileURL: URL, context: ModelContext
     ) {
         Task { @MainActor in
             let analysis = await AudioAnalyzer.analyze(url: fileURL)
-            guard let song = context.model(for: songID) as? Song else { return }
+            guard let song = context.existingSong(id: songID) else { return }
             if let bpm = analysis.bpm { song.bpm = bpm }
             if let key = analysis.key, key != .unknown { song.key = key }
             song.applyDetectedVocals(analysis.vocal)

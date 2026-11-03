@@ -1,6 +1,6 @@
 import XCTest
 
-final class TabSmokeUITests: MixStackUITestCase {
+final class TabSmokeUITests: StudioBuddyUITestCase {
     func testLibraryAndProjectsTabsShowSeededCatalog() {
         let app = launchApp()
 

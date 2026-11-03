@@ -1,7 +1,7 @@
 import SwiftUI
 import UIKit
 
-/// MixStack brand palette — studio archive on warm parchment (light) and near-black (dark).
+/// Studio Buddy brand palette — studio archive on warm parchment (light) and near-black (dark).
 /// Accent violet is shared across modes for producer identity; body text meets WCAG AA on surfaces.
 enum Brand {
     private static func dynamic(light: UIColor, dark: UIColor) -> Color {

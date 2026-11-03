@@ -10,7 +10,7 @@ Text blurbs and rendered PNG release cards.
 
 ```
 🎵 {title} · by {artist} · {bpm} BPM · {genre}
-Made with MixStack
+Made with Studio Buddy
 ```
 
 **Project** (`ProjectDetailView.tracklistText`):
@@ -18,7 +18,7 @@ Made with MixStack
 ```
 {title} — {kind}
 1. Track…
-Made with MixStack
+Made with Studio Buddy
 ```
 
 ## Visual share cards

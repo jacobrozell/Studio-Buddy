@@ -16,7 +16,7 @@ struct CompositeLogSink: LogSink {
 }
 
 struct ConsoleLogSink: LogSink {
-    private let logger = Logger(subsystem: "com.jacobrozell.mixstack", category: "app")
+    private let logger = Logger(subsystem: "com.jacobrozell.studiobuddy", category: "app")
 
     func write(_ record: LogRecord) {
         let suffix = record.metadata.map { " \($0)" } ?? ""

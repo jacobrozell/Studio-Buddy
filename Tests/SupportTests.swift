@@ -1,6 +1,6 @@
 import Testing
 import SwiftUI
-@testable import MixStack
+@testable import StudioBuddy
 
 @Suite("Support")
 struct SupportTests {

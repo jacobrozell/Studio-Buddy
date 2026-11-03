@@ -11,7 +11,7 @@ enum UITestDataSeeder {
         let songCount = (try? context.fetchCount(FetchDescriptor<Song>())) ?? 0
         guard songCount == 0 else { return }
 
-        let song = Song(title: songTitle, artist: "MixStack QA", bpm: 120, key: .aMinor, category: .readyToMix)
+        let song = Song(title: songTitle, artist: "Studio Buddy QA", bpm: 120, key: .aMinor, category: .readyToMix)
         context.insert(song)
 
         let mix = Mix(name: "Master", fileName: "uitest-master.m4a", duration: 180, isPrimary: true)

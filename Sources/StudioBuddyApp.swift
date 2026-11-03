@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct MixStackApp: App {
+struct StudioBuddyApp: App {
     /// Shared SwiftData container for the whole app.
     let modelContainer: ModelContainer
 
@@ -15,7 +15,7 @@ struct MixStackApp: App {
         } catch {
             fatalError("Failed to create ModelContainer: \(error)")
         }
-        AppLog.shared.info(.app, eventName: "app_launched", message: "MixStack started")
+        AppLog.shared.info(.app, eventName: "app_launched", message: "Studio Buddy started")
     }
 
     var body: some Scene {

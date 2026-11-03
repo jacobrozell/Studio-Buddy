@@ -59,7 +59,7 @@ Localization, iCloud, schema migrations, repository/DI layer.
 
 ## Tests (2026-06-17)
 
-**116** unit tests (`MixStackCI`) + **10** UI tests across four schemes.
+**116** unit tests (`StudioBuddyCI`) + **10** UI tests across four schemes.
 Full gate: `bash Scripts/ci/verify-local.sh`.
 
 | File | Area |
@@ -78,7 +78,7 @@ Full gate: `bash Scripts/ci/verify-local.sh`.
 | `ModelTests` | Models |
 | `SupportTests` | Helpers |
 
-Build: `MixStack` / `MixStackCI` scheme, iOS 18 simulator.
+Build: `StudioBuddy` / `StudioBuddyCI` scheme, iOS 18 simulator.
 
 ## Verification
 

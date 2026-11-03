@@ -1,4 +1,4 @@
-# MixStack — Features Guide (index)
+# Studio Buddy — Features Guide (index)
 
 **Agents: start at [`specs/shipped/README.md`](../specs/shipped/README.md)** — routing
 table to small, focused specs (~1–2k tokens each). Do not read this file for

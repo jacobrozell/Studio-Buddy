@@ -29,7 +29,7 @@ Engineering review (simulator + code audit). Not a full VoiceOver device sign-of
 
 - Manual VoiceOver walkthrough on device (Library filters sheet, drag reorder)
 - AXXXL Dynamic Type on Song detail metadata rows
-- iPad split-view library + projects ✅ (`MixStackUIPad` scheme)
+- iPad split-view library + projects ✅ (`StudioBuddyUIPad` scheme)
 - Contrast audit on category tint gradients
 
 ## Verification

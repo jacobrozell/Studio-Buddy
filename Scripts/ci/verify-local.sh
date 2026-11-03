@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-PROJECT="${ROOT}/MixStack.xcodeproj"
+PROJECT="${ROOT}/StudioBuddy.xcodeproj"
 SIM_IPHONE="${SIM_IPHONE:-iPhone 17}"
 SIM_IPAD="${SIM_IPAD:-iPad (A16)}"
 MCP="${MCP:-npx -y xcodebuildmcp@latest}"
@@ -30,10 +30,10 @@ run_test() {
   echo "::endgroup::"
 }
 
-run_test MixStackCI "${SIM_IPHONE}"
-run_test MixStackUISmoke "${SIM_IPHONE}"
-run_test MixStackUILandscape "${SIM_IPHONE}"
-run_test MixStackUIAccessibility "${SIM_IPHONE}"
-run_test MixStackUIPad "${SIM_IPAD}"
+run_test StudioBuddyCI "${SIM_IPHONE}"
+run_test StudioBuddyUISmoke "${SIM_IPHONE}"
+run_test StudioBuddyUILandscape "${SIM_IPHONE}"
+run_test StudioBuddyUIAccessibility "${SIM_IPHONE}"
+run_test StudioBuddyUIPad "${SIM_IPAD}"
 
 echo "✅ All verification gates passed."

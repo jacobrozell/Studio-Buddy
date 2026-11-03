@@ -1,6 +1,6 @@
 # Accessibility audits
 
-Dated VoiceOver and manual WCAG evidence for MixStack core flows.
+Dated VoiceOver and manual WCAG evidence for Studio Buddy core flows.
 
 ## Template
 

@@ -23,7 +23,7 @@ Engineering audit (simulator + automated WCAG UI tests + code review).
 
 ## Automated coverage
 
-`MixStackUIAccessibility` scheme runs `performAccessibilityAudit` on:
+`StudioBuddyUIAccessibility` scheme runs `performAccessibilityAudit` on:
 
 - Library (name/role/value + hit regions)
 - Song detail (after navigation)

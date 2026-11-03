@@ -1,13 +1,13 @@
 # Platform parity roadmap
 
-Adoption plan to bring MixStack to the same engineering bar as **Dart Buddy** and
+Adoption plan to bring Studio Buddy to the same engineering bar as **Dart Buddy** and
 **MiniMuster**. Reference repos: `Dart-Buddy`, `WarhammerTracker/ios/MiniMuster`.
 
 ## Status legend
 
 ✅ shipped · 🟡 in progress · ⛔ planned
 
-| Area | Dart Buddy / MiniMuster pattern | MixStack status |
+| Area | Dart Buddy / MiniMuster pattern | Studio Buddy status |
 |------|----------------------------------|-----------------|
 | Design tokens | `Brand` + `DS` layers, README | 🟡 `Sources/DesignSystem/` |
 | Tab shell | Content tabs + settings sheet | 🟡 Library/Projects + gear sheet |
@@ -16,7 +16,7 @@ Adoption plan to bring MixStack to the same engineering bar as **Dart Buddy** an
 | Analytics | Firebase allowlist (opt-in) | ⛔ Stub only; privacy-first |
 | CI split jobs | build-for-testing + test artifact | 🟡 `.github/workflows/ci.yml` |
 | Coverage artifact | informational summary, no gate | 🟡 `Scripts/ci/coverage-summary.sh` |
-| Unit + a11y tests | Swift Testing tags + contrast | ✅ `MixStackCI` scheme |
+| Unit + a11y tests | Swift Testing tags + contrast | ✅ `StudioBuddyCI` scheme |
 | UI test matrix | Nightly parallel schemes | ✅ split targets + nightly jobs |
 | GitHub Pages | Shared CSS, legal pages | 🟡 `docs/assets/style.css` |
 | A11y audits | Dated VoiceOver reports | 🟡 `2026-06-16-voiceover-core-flows.md` |
@@ -38,11 +38,11 @@ Adoption plan to bring MixStack to the same engineering bar as **Dart Buddy** an
 - Fix remaining SwiftLint strict issues (if any regress) ✅
 - Integration test: seed library via launch args, relaunch asserts persistence ✅
 - VoiceOver audit artifact for Library, Song detail, Player, Settings 🟡 automated + manual checklist
-- `MixStackCI` scheme: unit + accessibility only (fast PR path) ✅
+- `StudioBuddyCI` scheme: unit + accessibility only (fast PR path) ✅
 
 ## Phase 3 — UI test matrix
 
-- `MixStackUITestCase` with `-ui_test_reset`, `-disable_analytics` ✅
+- `StudioBuddyUITestCase` with `-ui_test_reset`, `-disable_analytics` ✅
 - Nightly workflow: smoke, library import, player, accessibility audit 🟡 smoke + landscape
 - Split UI targets in `project.yml` (mirror Dart Buddy) ✅ smoke, landscape, accessibility, iPad
 

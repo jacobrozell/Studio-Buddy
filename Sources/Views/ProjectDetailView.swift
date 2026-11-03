@@ -215,7 +215,7 @@ struct ProjectDetailView: View {
             guard let song = track.song else { continue }
             lines.append("\(track.position + 1). \(song.title)")
         }
-        lines.append("\nMade with MixStack")
+        lines.append("\nMade with Studio Buddy")
         return lines.joined(separator: "\n")
     }
 

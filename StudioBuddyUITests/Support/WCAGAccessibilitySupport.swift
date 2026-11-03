@@ -6,7 +6,7 @@ enum WCAGAccessibilityAuditProfile {
     static let touchTargets: XCUIAccessibilityAuditType = .hitRegion
 }
 
-extension MixStackUITestCase {
+extension StudioBuddyUITestCase {
     func runWCAGAudit(
         on app: XCUIApplication,
         auditTypes: XCUIAccessibilityAuditType,

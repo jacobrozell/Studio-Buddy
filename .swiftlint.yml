@@ -1,4 +1,4 @@
-# SwiftLint configuration for MixStack.
+# SwiftLint configuration for Studio Buddy.
 # Run `swiftlint` from the repo root (CI runs it on every PR).
 
 included:

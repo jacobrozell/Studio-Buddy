@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import MixStack
+@testable import StudioBuddy
 
 @Suite("ZIP archive")
 struct ZipArchiveTests {

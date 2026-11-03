@@ -46,7 +46,7 @@ enum BrandKitSettings {
 
         var footerText: String {
             if !tagline.isEmpty { return tagline }
-            return "Made with MixStack"
+            return "Made with Studio Buddy"
         }
 
         func creditLine(for song: Song) -> String? {

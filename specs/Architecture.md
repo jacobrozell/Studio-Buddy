@@ -2,7 +2,7 @@
 
 ## Layers
 
-MixStack is a single-target SwiftUI + SwiftData app. Dependencies point
+Studio Buddy is a single-target SwiftUI + SwiftData app. Dependencies point
 downward only:
 
 | Layer | Folder | Responsibility | May import |

@@ -81,8 +81,10 @@ struct SettingsCatalogSection: View {
 
     private var catalogImportTypes: [UTType] {
         var types: [UTType] = [.zip]
-        if let mixstack = UTType(filenameExtension: CatalogExporter.fileExtension) {
-            types.append(mixstack)
+        for ext in [CatalogExporter.fileExtension, CatalogExporter.legacyFileExtension] {
+            if let type = UTType(filenameExtension: ext) {
+                types.append(type)
+            }
         }
         return types
     }

@@ -1,5 +1,5 @@
 import Testing
-@testable import MixStack
+@testable import StudioBuddy
 
 @Suite("Adaptive layout", .tags(.unit, .accessibility))
 struct AdaptiveLayoutTests {

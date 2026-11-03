@@ -1,11 +1,11 @@
 import Foundation
 import SwiftData
-@testable import MixStack
+@testable import StudioBuddy
 
 enum PersistenceTestSupport {
     static func makeTemporaryStoreURL() throws -> URL {
         let directory = FileManager.default.temporaryDirectory
-            .appendingPathComponent("MixStackTests-\(UUID().uuidString)", isDirectory: true)
+            .appendingPathComponent("StudioBuddyTests-\(UUID().uuidString)", isDirectory: true)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         return directory.appendingPathComponent("catalog.store")
     }

@@ -10,8 +10,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  CI_XCODE_PROJECT: MixStack.xcodeproj
-  CI_XCODE_SCHEME: MixStackCI
+  CI_XCODE_PROJECT: StudioBuddy.xcodeproj
+  CI_XCODE_SCHEME: StudioBuddyCI
   SIM_DESTINATION: platform=iOS Simulator,name=iPhone 17
 
 jobs:

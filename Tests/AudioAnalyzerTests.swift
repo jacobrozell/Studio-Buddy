@@ -1,6 +1,6 @@
 import Testing
 import Foundation
-@testable import MixStack
+@testable import StudioBuddy
 
 @Suite("Audio Analyzer", .serialized)
 struct AudioAnalyzerTests {

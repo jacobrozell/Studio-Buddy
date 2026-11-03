@@ -1,4 +1,4 @@
-# MixStack — release todo
+# Studio Buddy — release todo
 
 Status legend: `[ ]` todo · `[x]` done
 

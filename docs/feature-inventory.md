@@ -48,11 +48,11 @@ Status legend: ✅ shipped · 🟡 partial · 🧪 unverified · ⛔ not started
 | Settings | Appearance, haptics, links, delete-all | ✅ | ✅ | `SettingsView` |
 | Settings | Catalog export / import (ZIP) | ✅ | ✅ | `CatalogExporter`, `CatalogImporter`, `CatalogSyncTests` |
 | Platform | Release-surface gating | ✅ | ✅ | `ReleaseSurface` |
-| Platform | Accessibility (engineering pass) | ✅ | ✅ | `MixStackUIAccessibility` (4 tests) |
+| Platform | Accessibility (engineering pass) | ✅ | ✅ | `StudioBuddyUIAccessibility` (4 tests) |
 | Platform | Localization | 🟡 | ✅ | `L10n` + `Localizable.xcstrings` + parity test; most UI still hard-coded |
 | Platform | iCloud sync | ⛔ | — | — |
 | Platform | Onboarding / first-run | ✅ | ✅ | `OnboardingView`, `RootView` |
 | Platform | Repository layer / DI container | 🟡 | ✅ | `SongRepository`, `ProjectRepository`, `AppDependencies` |
 | Platform | Schema versioning / migration | ⛔ | — | single implicit schema |
-| Platform | Unit tests / local build | ✅ | ✅ | `MixStackCI`, `Scripts/ci/verify-local.sh` (121 unit + 10 UI) |
+| Platform | Unit tests / local build | ✅ | ✅ | `StudioBuddyCI`, `Scripts/ci/verify-local.sh` (121 unit + 10 UI) |
 | Platform | GitHub Actions CI | ✅ | 🧪 | `.github/workflows/ci.yml`, `Scripts/ci/verify-local.sh` |

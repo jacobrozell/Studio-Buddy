@@ -3,8 +3,8 @@ set -euo pipefail
 
 DESTINATION="${1:?destination required}"
 
-PROJECT="${CI_XCODE_PROJECT:-MixStack.xcodeproj}"
-SCHEME="${CI_XCODE_SCHEME:-MixStackCI}"
+PROJECT="${CI_XCODE_PROJECT:-StudioBuddy.xcodeproj}"
+SCHEME="${CI_XCODE_SCHEME:-StudioBuddyCI}"
 LOG_FILE="${CI_XCODE_TEST_LOG:-xcodebuild-test.log}"
 
 echo "::group::Running tests (without building)"

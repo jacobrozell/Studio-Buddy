@@ -4,13 +4,13 @@
 
 | Target / Scheme | Runs on | Contents |
 |-----------------|---------|----------|
-| `MixStackTests` via `MixStackCI` | Every PR / push | Unit + accessibility contract + contrast + persistence |
-| `MixStackUISmoke` | Nightly + local | Tab navigation + seeded catalog |
-| `MixStackUILandscape` | Nightly + local | Landscape orientation smoke |
-| `MixStackUIAccessibility` | Nightly + local | WCAG `performAccessibilityAudit` on core screens |
-| `MixStackUIPad` | Nightly + local | iPad split navigation |
-| `MixStackUI` | Local dev | All UI targets (parallel) |
-| `MixStack` | Local dev | Unit + all UI targets + coverage |
+| `StudioBuddyTests` via `StudioBuddyCI` | Every PR / push | Unit + accessibility contract + contrast + persistence |
+| `StudioBuddyUISmoke` | Nightly + local | Tab navigation + seeded catalog |
+| `StudioBuddyUILandscape` | Nightly + local | Landscape orientation smoke |
+| `StudioBuddyUIAccessibility` | Nightly + local | WCAG `performAccessibilityAudit` on core screens |
+| `StudioBuddyUIPad` | Nightly + local | iPad split navigation |
+| `StudioBuddyUI` | Local dev | All UI targets (parallel) |
+| `StudioBuddy` | Local dev | Unit + all UI targets + coverage |
 
 ## Swift Testing tags
 
@@ -59,7 +59,7 @@ iPad-only split tests live in `IPadSplitUITests` (skipped on iPhone).
 
 ## Coverage
 
-- Local: Xcode scheme `gatherCoverageData: true` on `MixStackCI`
+- Local: Xcode scheme `gatherCoverageData: true` on `StudioBuddyCI`
 - CI: informational artifact via `Scripts/ci/coverage-summary.sh` (no threshold gate)
 
 ## Verification

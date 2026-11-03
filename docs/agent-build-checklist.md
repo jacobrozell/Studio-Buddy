@@ -1,9 +1,9 @@
-# Agent Build Checklist — MixStack
+# Agent Build Checklist — Studio Buddy
 
 Living status of this app against the 0→Ship engineering checklist. The full
 generic template (all 18 phases, agent prompt library, query template) is the
 canonical reference — paste it to start a new session or store a copy in your
-docs repo. **This file tracks where MixStack actually is.**
+docs repo. **This file tracks where Studio Buddy actually is.**
 
 Legend: ✅ done · 🟡 partial · ⛔ not started · ⚪ N/A (pre-v1)
 
@@ -18,12 +18,12 @@ Legend: ✅ done · 🟡 partial · ⛔ not started · ⚪ N/A (pre-v1)
 | 4 | Persistence & repositories | 🟡 | SwiftData models + container ✅. Repository protocols + `AppDependencies` DI ✅. Versioned schema/migration ⛔. |
 | 5 | App shell & navigation | 🟡 | `@main`, TabView, now-playing chrome, release-surface gate, onboarding ✅. Router/deep links ⛔. |
 | 6 | First vertical slice | ✅ | Import → library → detail → project → sequence → share → playback ✅. Integration + relaunch tests ✅. |
-| 7 | Shared chrome & adaptive layout | 🟡 | Empty states, banners, badges ✅. iPad split ✅ (`MixStackUIPad`). |
+| 7 | Shared chrome & adaptive layout | 🟡 | Empty states, banners, badges ✅. iPad split ✅ (`StudioBuddyUIPad`). |
 | 8 | Entity mgmt & settings | ✅ | CRUD, brand kit, catalog export/import, delete-all ✅. |
 | 9 | Lists, history & derived views | ✅ | Library/Projects lists, energy chart, filters, section headers ✅. |
 | 10 | Localization | 🟡 | `L10n` + `Localizable.xcstrings` + parity test ✅; most strings still hard-coded. |
 | 11 | Accessibility hardening (gate) | 🟡 | Engineering pass ✅; automated UI a11y audits ✅; physical VoiceOver sign-off ⛔. |
-| 12 | Test matrix & CI | ✅ | **121** unit + **10** UI tests; SwiftLint strict ✅; split UI schemes + `MixStackCI` ✅; drift script in CI ✅. |
+| 12 | Test matrix & CI | ✅ | **121** unit + **10** UI tests; SwiftLint strict ✅; split UI schemes + `StudioBuddyCI` ✅; drift script in CI ✅. |
 | 13 | Release surface / lean ship | 🟡 | `ReleaseSurface` gate + `-enable_full_product_surface` ✅. App Store metadata ⛔. |
 | 14 | Telemetry/deep links/extensions | ⚪ | Analytics stub only; off by default. |
 | 15 | Legal pages & store URLs | 🟡 | `docs/*.html` + `AppLinks` ✅. Pages deploy workflow 🧪. |
@@ -41,11 +41,11 @@ Full gate on **iPhone 17** + **iPad (A16)** sims via `bash Scripts/ci/verify-loc
 | `xcodegen generate` | ✅ |
 | `swiftlint --strict` | ✅ |
 | `check-spec-drift.py` | ✅ |
-| `MixStackCI` (121 unit tests) | ✅ |
-| `MixStackUISmoke` | ✅ 2/2 |
-| `MixStackUIAccessibility` | ✅ 4/4 |
-| `MixStackUILandscape` | ✅ 2/2 |
-| `MixStackUIPad` | ✅ 2/2 |
+| `StudioBuddyCI` (121 unit tests) | ✅ |
+| `StudioBuddyUISmoke` | ✅ 2/2 |
+| `StudioBuddyUIAccessibility` | ✅ 4/4 |
+| `StudioBuddyUILandscape` | ✅ 2/2 |
+| `StudioBuddyUIPad` | ✅ 2/2 |
 
 **Simulator UI exercised:** onboarding · library filters/swipes · song detail ·
 full player · project sequencing · suggest-order preview · share card · audiogram

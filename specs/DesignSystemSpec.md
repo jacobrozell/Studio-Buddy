@@ -1,6 +1,6 @@
 # Design System Spec
 
-MixStack visual identity: **studio archive** — warm parchment (light) and near-black
+Studio Buddy visual identity: **studio archive** — warm parchment (light) and near-black
 (dark) with violet accent. Matches the family feel of MiniMuster (material cards,
 serif display) while keeping a distinct producer accent.
 

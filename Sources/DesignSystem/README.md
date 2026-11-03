@@ -1,4 +1,4 @@
-# MixStack Design System
+# Studio Buddy Design System
 
 Layered tokens matching the MiniMuster / Dart Buddy pattern: **Brand** for product chrome, **DS** for layout rhythm.
 

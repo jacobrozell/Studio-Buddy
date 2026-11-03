@@ -133,11 +133,11 @@ struct SongDetailView: View {
     }
 
     private func analyzeLoudness(_ mix: Mix) {
-        let mixID = mix.persistentModelID
+        let mixID = mix.id
         let url = mix.fileURL
         Task { @MainActor in
             guard let lufs = await LoudnessAnalyzer.estimateIntegratedLUFS(url: url),
-                  let mix = modelContext.model(for: mixID) as? Mix else { return }
+                  let mix = modelContext.existingMix(id: mixID) else { return }
             mix.integratedLUFS = lufs
             mix.loudnessAnalyzedAt = .now
             Haptics.success()
@@ -277,7 +277,7 @@ struct SongDetailView: View {
         parts.append("\(song.bpm) BPM")
         if !song.genre.isEmpty { parts.append(song.genre) }
         if !song.spotifyURL.isEmpty { parts.append(song.spotifyURL) }
-        return parts.joined(separator: " · ") + "\n\nMade with MixStack"
+        return parts.joined(separator: " · ") + "\n\nMade with Studio Buddy"
     }
 
     private func addMix(fileName: String, duration: Double, sourceBasename: String) {
@@ -291,15 +291,16 @@ struct SongDetailView: View {
             sourceBasename: sourceBasename
         )
         let mix = SongImportService.attachMix(to: song, audio: audio, parsed: parsed, context: modelContext)
-        let mixID = mix.persistentModelID
+        let mixID = mix.id
         let url = mix.fileURL
+        try? modelContext.save()
         Task { @MainActor in
             let peaks = await WaveformGenerator.generate(url: url)
-            if !peaks.isEmpty, let mix = modelContext.model(for: mixID) as? Mix {
+            if !peaks.isEmpty, let mix = modelContext.existingMix(id: mixID) {
                 mix.waveform = peaks
             }
             if let lufs = await LoudnessAnalyzer.estimateIntegratedLUFS(url: url),
-               let mix = modelContext.model(for: mixID) as? Mix {
+               let mix = modelContext.existingMix(id: mixID) {
                 mix.integratedLUFS = lufs
                 mix.loudnessAnalyzedAt = .now
             }

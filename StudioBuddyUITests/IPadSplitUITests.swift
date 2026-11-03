@@ -1,6 +1,6 @@
 import XCTest
 
-final class IPadSplitUITests: MixStackUITestCase {
+final class IPadSplitUITests: StudioBuddyUITestCase {
     func testLibrarySplitShowsSongDetailOnIPad() throws {
         try requireIPad()
 

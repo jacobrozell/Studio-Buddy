@@ -1,20 +1,20 @@
-# MixStack — future ideas
+# Studio Buddy — future ideas
 
 From [`../ROADMAP.md`](../ROADMAP.md). Shipped items live in `specs/shipped/`.
 
 ## Shared tempo package (RPM Buddy engine)
 
-MixStack will **not** maintain its own BPM estimator long-term. After [`RPM Buddy`](../../RPMBuddy/FutureIdeas/backlog.md) ships TestFlight and extracts an SPM package, MixStack adopts it for import and on-demand analysis.
+Studio Buddy will **not** maintain its own BPM estimator long-term. After [`RPM Buddy`](../../RPMBuddy/FutureIdeas/backlog.md) ships TestFlight and extracts an SPM package, Studio Buddy adopts it for import and on-demand analysis.
 
 | Change | Notes |
 |--------|-------|
 | **Replace `AudioAnalyzer.estimateBPM`** | Call shared `BPMAnalyzer` / file loader from the package; one mono PCM load → tempo + existing key + vocal |
-| **Keep in MixStack** | `estimateKey`, chromagram, `MusicalKey`, `estimateVocalPresence`, catalog write-back |
+| **Keep in Studio Buddy** | `estimateKey`, chromagram, `MusicalKey`, `estimateVocalPresence`, catalog write-back |
 | **Confidence + alternatives** | Surface package `BPMEstimate` in song detail (optional half/double-time hints when confidence is ambiguous) |
 | **Re-analyze migration** | New imports use package BPM immediately; existing songs unchanged unless user re-analyzes |
 | **Later** | Live mic tempo (hold phone at monitor while A/B’ing) via package streaming API if RPM Buddy adds it |
 
-MixStack’s role long-term: **producer toolkit** — catalog, sequencing, loudness, key/vocal, share cards — with tempo analysis delegated to the shared package.
+Studio Buddy’s role long-term: **producer toolkit** — catalog, sequencing, loudness, key/vocal, share cards — with tempo analysis delegated to the shared package.
 
 ---
 

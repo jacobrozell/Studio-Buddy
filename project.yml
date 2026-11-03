@@ -1,4 +1,4 @@
-name: MixStack
+name: StudioBuddy
 options:
   bundleIdPrefix: com.jacobrozell
   deploymentTarget:
@@ -16,7 +16,7 @@ settings:
     ENABLE_USER_SCRIPT_SANDBOXING: YES
 
 targets:
-  MixStack:
+  StudioBuddy:
     type: application
     platform: iOS
     deploymentTarget: "18.0"
@@ -39,172 +39,172 @@ targets:
           find "${SRCROOT}/Resources" -maxdepth 1 \( -iname '*.mp3' -o -iname '*.m4a' -o -iname '*.wav' \) -exec cp {} "${dest}/" \;
     settings:
       base:
-        INFOPLIST_KEY_CFBundleDisplayName: MixStack
+        INFOPLIST_KEY_CFBundleDisplayName: Studio Buddy
         INFOPLIST_KEY_CFBundleIconName: AppIcon
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
         INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
-        PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.mixstack
+        PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.studiobuddy
         TARGETED_DEVICE_FAMILY: "1,2"
-        INFOPLIST_KEY_NSMicrophoneUsageDescription: "MixStack needs access so you can record and import audio."
+        INFOPLIST_KEY_NSMicrophoneUsageDescription: "Studio Buddy needs access so you can record and import audio."
         INFOPLIST_KEY_UIBackgroundModes: audio
         INFOPLIST_KEY_UIFileSharingEnabled: YES
         INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace: YES
         ENABLE_USER_SCRIPT_SANDBOXING: NO
 
-  MixStackTests:
+  StudioBuddyTests:
     type: bundle.unit-test
     platform: iOS
     deploymentTarget: "18.0"
     sources:
       - path: Tests
     dependencies:
-      - target: MixStack
+      - target: StudioBuddy
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.mixstack.tests
+        PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.studiobuddy.tests
         GENERATE_INFOPLIST_FILE: YES
 
-  MixStackUISmokeUITests:
+  StudioBuddyUISmokeUITests:
     type: bundle.ui-testing
     platform: iOS
     deploymentTarget: "18.0"
     sources:
-      - path: MixStackUITests/Support
-      - path: MixStackUITests/TabSmokeUITests.swift
+      - path: StudioBuddyUITests/Support
+      - path: StudioBuddyUITests/TabSmokeUITests.swift
         type: file
     dependencies:
-      - target: MixStack
+      - target: StudioBuddy
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.mixstack.uitests.smoke
+        PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.studiobuddy.uitests.smoke
         GENERATE_INFOPLIST_FILE: YES
-        TEST_TARGET_NAME: MixStack
+        TEST_TARGET_NAME: StudioBuddy
 
-  MixStackUILandscapeUITests:
+  StudioBuddyUILandscapeUITests:
     type: bundle.ui-testing
     platform: iOS
     deploymentTarget: "18.0"
     sources:
-      - path: MixStackUITests/Support
-      - path: MixStackUITests/LandscapeSmokeUITests.swift
+      - path: StudioBuddyUITests/Support
+      - path: StudioBuddyUITests/LandscapeSmokeUITests.swift
         type: file
     dependencies:
-      - target: MixStack
+      - target: StudioBuddy
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.mixstack.uitests.landscape
+        PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.studiobuddy.uitests.landscape
         GENERATE_INFOPLIST_FILE: YES
-        TEST_TARGET_NAME: MixStack
+        TEST_TARGET_NAME: StudioBuddy
 
-  MixStackUIAccessibilityUITests:
+  StudioBuddyUIAccessibilityUITests:
     type: bundle.ui-testing
     platform: iOS
     deploymentTarget: "18.0"
     sources:
-      - path: MixStackUITests/Support
-      - path: MixStackUITests/WCAGAccessibilityUITests.swift
+      - path: StudioBuddyUITests/Support
+      - path: StudioBuddyUITests/WCAGAccessibilityUITests.swift
         type: file
     dependencies:
-      - target: MixStack
+      - target: StudioBuddy
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.mixstack.uitests.accessibility
+        PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.studiobuddy.uitests.accessibility
         GENERATE_INFOPLIST_FILE: YES
-        TEST_TARGET_NAME: MixStack
+        TEST_TARGET_NAME: StudioBuddy
 
-  MixStackUIPadUITests:
+  StudioBuddyUIPadUITests:
     type: bundle.ui-testing
     platform: iOS
     deploymentTarget: "18.0"
     sources:
-      - path: MixStackUITests/Support
-      - path: MixStackUITests/IPadSplitUITests.swift
+      - path: StudioBuddyUITests/Support
+      - path: StudioBuddyUITests/IPadSplitUITests.swift
         type: file
     dependencies:
-      - target: MixStack
+      - target: StudioBuddy
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.mixstack.uitests.ipad
+        PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.studiobuddy.uitests.ipad
         GENERATE_INFOPLIST_FILE: YES
-        TEST_TARGET_NAME: MixStack
+        TEST_TARGET_NAME: StudioBuddy
 
 schemes:
-  MixStack:
+  StudioBuddy:
     build:
       targets:
-        MixStack: all
+        StudioBuddy: all
     test:
       targets:
-        - MixStackTests
-        - name: MixStackUISmokeUITests
+        - StudioBuddyTests
+        - name: StudioBuddyUISmokeUITests
           parallelizable: true
-        - name: MixStackUILandscapeUITests
+        - name: StudioBuddyUILandscapeUITests
           parallelizable: true
-        - name: MixStackUIAccessibilityUITests
+        - name: StudioBuddyUIAccessibilityUITests
           parallelizable: true
-        - name: MixStackUIPadUITests
+        - name: StudioBuddyUIPadUITests
           parallelizable: true
       gatherCoverageData: true
 
-  MixStackCI:
+  StudioBuddyCI:
     build:
       targets:
-        MixStack: all
+        StudioBuddy: all
     test:
       targets:
-        - MixStackTests
+        - StudioBuddyTests
       gatherCoverageData: true
 
-  MixStackUISmoke:
+  StudioBuddyUISmoke:
     build:
       targets:
-        MixStack: all
+        StudioBuddy: all
     test:
       targets:
-        - name: MixStackUISmokeUITests
+        - name: StudioBuddyUISmokeUITests
           parallelizable: true
 
-  MixStackUILandscape:
+  StudioBuddyUILandscape:
     build:
       targets:
-        MixStack: all
+        StudioBuddy: all
     test:
       targets:
-        - name: MixStackUILandscapeUITests
+        - name: StudioBuddyUILandscapeUITests
           parallelizable: true
 
-  MixStackUIAccessibility:
+  StudioBuddyUIAccessibility:
     build:
       targets:
-        MixStack: all
+        StudioBuddy: all
     test:
       targets:
-        - name: MixStackUIAccessibilityUITests
+        - name: StudioBuddyUIAccessibilityUITests
           parallelizable: true
 
-  MixStackUIPad:
+  StudioBuddyUIPad:
     build:
       targets:
-        MixStack: all
+        StudioBuddy: all
     test:
       targets:
-        - name: MixStackUIPadUITests
+        - name: StudioBuddyUIPadUITests
           parallelizable: true
 
-  MixStackUI:
+  StudioBuddyUI:
     build:
       targets:
-        MixStack: all
+        StudioBuddy: all
     test:
       targets:
-        - name: MixStackUISmokeUITests
+        - name: StudioBuddyUISmokeUITests
           parallelizable: true
-        - name: MixStackUILandscapeUITests
+        - name: StudioBuddyUILandscapeUITests
           parallelizable: true
-        - name: MixStackUIAccessibilityUITests
+        - name: StudioBuddyUIAccessibilityUITests
           parallelizable: true
-        - name: MixStackUIPadUITests
+        - name: StudioBuddyUIPadUITests
           parallelizable: true

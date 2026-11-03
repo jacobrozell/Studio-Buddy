@@ -1,10 +1,12 @@
 import Foundation
 import SwiftData
 
-/// Builds a portable `.mixstack` catalog zip from the current SwiftData store.
+/// Builds a portable `.studiobuddy` catalog zip from the current SwiftData store.
 @MainActor
 enum CatalogExporter {
-    static let fileExtension = "mixstack"
+    static let fileExtension = "studiobuddy"
+    /// Exports written before the Studio Buddy rename. The importer still accepts these.
+    static let legacyFileExtension = "mixstack"
 
     static func export(from context: ModelContext) throws -> URL {
         let songs = try context.fetch(FetchDescriptor<Song>())
@@ -64,7 +66,7 @@ enum CatalogExporter {
         }
 
         let zipURL = FileManager.default.temporaryDirectory
-            .appendingPathComponent("MixStack-Catalog-\(formattedDate()).\(fileExtension)")
+            .appendingPathComponent("StudioBuddy-Catalog-\(formattedDate()).\(fileExtension)")
         try ZipArchive.createArchive(from: workspace, to: zipURL)
         try? FileManager.default.removeItem(at: workspace)
         return zipURL

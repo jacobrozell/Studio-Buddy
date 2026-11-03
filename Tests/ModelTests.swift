@@ -1,7 +1,7 @@
 import Testing
 import SwiftData
 import Foundation
-@testable import MixStack
+@testable import StudioBuddy
 
 @Suite("Models")
 @MainActor
@@ -26,6 +26,20 @@ struct ModelTests {
         song.category = .mastered
         #expect(song.keyRaw == MusicalKey.cMajor.rawValue)
         #expect(song.categoryRaw == SongCategory.mastered.rawValue)
+    }
+
+    @Test("A saved mix can store a waveform when fetched by its stable id")
+    func waveformUpdateAfterSave() throws {
+        let context = try makeContext()
+        let mix = Mix(name: "Original", fileName: "a.m4a")
+        context.insert(mix)
+        let mixID = mix.id
+        try context.save()
+
+        let found = try #require(context.existingMix(id: mixID))
+        found.waveform = [0.2, 0.4, 1]
+        #expect(found.hasWaveform)
+        #expect(context.existingMix(id: UUID()) == nil)
     }
 
     @Test("Primary mix prefers the flagged mix")

@@ -16,14 +16,14 @@ struct OnboardingView: View {
         OnboardingPage(
             symbol: "music.note.house",
             tint: Brand.accent,
-            title: "Welcome to MixStack",
+            title: "Welcome to Studio Buddy",
             message: "Your home for the music you make — from first idea to finished release."
         ),
         OnboardingPage(
             symbol: "square.and.arrow.down",
             tint: Brand.accentBright,
             title: "Build Your Library",
-            message: "Import tracks straight from your DAW. MixStack auto-detects BPM and key "
+            message: "Import tracks straight from your DAW. Studio Buddy auto-detects BPM and key "
                 + "and draws a waveform for each one."
         ),
         OnboardingPage(

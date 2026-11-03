@@ -1,4 +1,4 @@
-# MixStack — UX Polish & Feature Roadmap
+# Studio Buddy — UX Polish & Feature Roadmap
 
 This document looks at the app the way a working producer would actually use it,
 calls out the friction in today's build, and lays out where it should go next.

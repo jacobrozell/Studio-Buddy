@@ -1,7 +1,7 @@
 import Foundation
 import SwiftData
 import Testing
-@testable import MixStack
+@testable import StudioBuddy
 
 @Suite("Persistence integration", .tags(.regression, .releaseGate))
 @MainActor

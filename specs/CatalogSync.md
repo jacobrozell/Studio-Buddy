@@ -25,7 +25,7 @@ iPad, and export a portable bundle before iCloud lands or for manual backup.
 
 ### Phase 1: Portable export / import
 
-**Export bundle** (`.producerbuddy` zip):
+**Export bundle** (`.studiobuddy` zip; `.mixstack` still imports):
 
 ```
 manifest.json          // schema version, export date, counts
