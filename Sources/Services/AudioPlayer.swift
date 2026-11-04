@@ -324,6 +324,10 @@ extension AudioPlayer: AVAudioPlayerDelegate {
         Task { @MainActor in
             // Auto-advance through a project queue; otherwise rest at the end.
             if self.hasNext {
+                let gap = ProjectPlaybackGap.current.rawValue
+                if gap > 0 {
+                    try? await Task.sleep(for: .seconds(gap))
+                }
                 self.playNext()
             } else {
                 self.isPlaying = false

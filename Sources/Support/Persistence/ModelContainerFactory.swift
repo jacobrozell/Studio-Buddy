@@ -22,8 +22,10 @@ enum ModelContainerFactory {
             try ensureParentDirectoryExists(for: url)
             configuration = ModelConfiguration(url: url)
         }
+        let schema = Schema(versionedSchema: StudioBuddySchemaV1.self)
         return try ModelContainer(
-            for: Song.self, Mix.self, Project.self, ProjectTrack.self,
+            for: schema,
+            migrationPlan: StudioBuddyMigrationPlan.self,
             configurations: configuration
         )
     }

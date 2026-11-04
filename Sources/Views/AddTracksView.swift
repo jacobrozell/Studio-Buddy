@@ -11,6 +11,7 @@ struct AddTracksView: View {
     @Query(sort: \Song.title) private var allSongs: [Song]
 
     @State private var selected: Set<UUID> = []
+    @State private var filterCompatibleKeys = false
 
     var body: some View {
         NavigationStack {
@@ -23,7 +24,7 @@ struct AddTracksView: View {
                     )
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    List(availableSongs, selection: $selected) { song in
+                    List(filteredSongs, selection: $selected) { song in
                         VStack(alignment: .leading, spacing: 2) {
                             Text(song.title).font(.body.weight(.medium))
                             Text("\(song.bpm) BPM\(song.genre.isEmpty ? "" : " · \(song.genre)")")
@@ -45,6 +46,12 @@ struct AddTracksView: View {
                     Button("Add (\(selected.count))", action: add)
                         .disabled(selected.isEmpty)
                 }
+                if lastTrackKey != nil {
+                    ToolbarItem(placement: .bottomBar) {
+                        Toggle("Compatible keys", isOn: $filterCompatibleKeys)
+                            .accessibilityLabel("Show harmonically compatible keys")
+                    }
+                }
             }
         }
     }
@@ -53,6 +60,18 @@ struct AddTracksView: View {
     private var availableSongs: [Song] {
         let existing = Set(project.tracks.compactMap { $0.song?.id })
         return allSongs.filter { !existing.contains($0.id) }
+    }
+
+    private var lastTrackKey: MusicalKey? {
+        project.orderedTracks.last?.song?.key
+    }
+
+    private var filteredSongs: [Song] {
+        guard filterCompatibleKeys, let key = lastTrackKey, key != .unknown else {
+            return availableSongs
+        }
+        let compatible = MusicalKey.harmonicallyCompatible(with: key)
+        return availableSongs.filter { compatible.contains($0.key) }
     }
 
     private func add() {

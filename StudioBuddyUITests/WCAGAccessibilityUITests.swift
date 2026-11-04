@@ -34,6 +34,19 @@ final class WCAGAccessibilityUITests: StudioBuddyUITestCase {
         }
     }
 
+    func testFullPlayerPassesAccessibilityAudits() {
+        let app = launchApp()
+        let song = app.staticTexts[Self.seededSongTitle].firstMatch
+        XCTAssertTrue(song.waitForExistence(timeout: timeout))
+        song.tap()
+        let play = app.buttons["song.play"].firstMatch
+        if play.waitForExistence(timeout: timeout) {
+            play.tap()
+        }
+        XCTAssertTrue(app.buttons["player.playPause"].waitForExistence(timeout: timeout))
+        runWCAGAudit(on: app, auditTypes: WCAGAccessibilityAuditProfile.nameRoleValue)
+    }
+
     func testSettingsPassesAccessibilityAudits() {
         let app = launchApp()
         let settings = app.buttons[Self.settingsButtonID]

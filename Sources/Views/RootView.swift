@@ -10,17 +10,21 @@ struct RootView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @AppStorage("appearance") private var appearance: AppAppearance = .system
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+    @State private var selectedTab = 0
 
     var body: some View {
-        TabView {
-            Tab(L10n.tabLibrary, systemImage: "music.note.list") {
+        TabView(selection: $selectedTab) {
+            Tab(L10n.tabLibrary, systemImage: "music.note.list", value: 0) {
                 LibraryView()
+                    .environment(\.marketingScene, MarketingLaunch.scene)
             }
-            Tab(L10n.tabProjects, systemImage: "square.stack.3d.up") {
+            Tab(L10n.tabProjects, systemImage: "square.stack.3d.up", value: 1) {
                 ProjectListView()
+                    .environment(\.marketingScene, MarketingLaunch.scene)
             }
         }
         .brandTabChrome()
+        .studioWindowChrome()
         .safeAreaInset(edge: .bottom) {
             if audioPlayer.currentMix != nil {
                 NowPlayingBar()
@@ -43,6 +47,10 @@ struct RootView: View {
                 UITestDataSeeder.seedIfEmpty(into: modelContext)
             }
             await seedDemoTracksIfNeeded()
+            await MarketingDataSeeder.seedIfRequested(into: modelContext)
+            if MarketingLaunch.scene == .project {
+                selectedTab = 1
+            }
         }
     }
 

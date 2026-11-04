@@ -9,17 +9,19 @@
 <body>
   <main>
     <h1>Privacy Policy</h1>
-    <p><em>Last updated: 16 June 2026</em></p>
+    <p><em>Last updated: 4 November 2026</em></p>
 
     <p>Studio Buddy is designed to keep your music and data private.</p>
 
     <h2>What we collect</h2>
-    <p><strong>Nothing by default.</strong> Studio Buddy does not collect, transmit, or
-       sell personal information. The App Store build contains no analytics,
-       advertising, or tracking SDKs.</p>
-    <p>Dogfood builds may optionally enable anonymous, allowlisted analytics
-       events when launched with <code>-enable_analytics</code>. Those events
-       never include song titles, file names, or audio content.</p>
+    <p>Your catalog and audio stay on your device. Release builds send
+       <strong>allowlisted</strong> usage events through Firebase Analytics
+       (Google Analytics 4) and diagnostic reports through Firebase Crashlytics.
+       Those payloads never include song titles, file names, notes, artist names,
+       or audio content.</p>
+    <p>Debug builds do not send analytics unless you launch with
+       <code>-enable_analytics</code>. Launching with <code>-disable_analytics</code>
+       turns remote telemetry off.</p>
 
     <h2>Where your data lives</h2>
     <p>The audio files you import and the metadata you create (songs, mixes,

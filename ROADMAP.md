@@ -64,8 +64,7 @@ formats and link-in-bio tooling.
   share cards and audiograms. See [BrandKit](specs/BrandKit.md).
 - ✅ **Audiogram export.** Branded MP4 teaser with animated waveform. See
   [AudiogramExport](specs/AudiogramExport.md).
-- 🟡 **Per-platform presets.** Square (1:1) and story (9:16) ship; **banner (16:9)**
-  still open.
+- ✅ **Per-platform presets.** Square (1:1), story (9:16), and banner (16:9) ship.
 - ⛔ **Pre-save / link-in-bio page** generator for an upcoming release.
 
 ---
@@ -119,7 +118,7 @@ A rough order that delivers visible value early and builds toward the vision:
 
 1. ~~**Import-first flow + embedded metadata**~~ — ✅ shipped.
 2. ~~**Full-screen player with scrubbing + A/B mix compare + section loops**~~ — ✅ shipped.
-3. ~~**Visual release cards + brand kit + audiograms**~~ — ✅ shipped (banner preset still open).
+3. ~~**Visual release cards + brand kit + audiograms**~~ — ✅ shipped.
 4. ~~**Energy curve graph + badge explanations + suggest-order preview**~~ — ✅ shipped.
 5. ~~**Background audio + lock-screen controls + project queue**~~ — ✅ shipped.
 6. ~~**Harmonic mixing (Camelot wheel)**~~ — ✅ shipped. *(Arc templates + neighbour suggestions still open.)*
@@ -140,7 +139,7 @@ Prioritized from a hobbyist FL Studio → streaming workflow. Each has a spec in
 
 | Priority | Feature | Spec | Status |
 |----------|---------|------|--------|
-| Now | Version stack compare + smarter import | [VersionStack](specs/VersionStack.md) | 🟡 partial |
+| Now | Version stack compare + smarter import | [VersionStack](specs/VersionStack.md) | 🟡 merge UI shipped |
 | Next | Sequencing arcs + transition notes | [SequencingEnhancements](specs/SequencingEnhancements.md) | 🟡 preview shipped |
 | Next | Timeline markers (drop, hook) | [TimelineMarkers](specs/TimelineMarkers.md) | ⛔ |
 | Soon | iCloud catalog sync | [CatalogSync](specs/CatalogSync.md) | 🟡 export/import shipped |

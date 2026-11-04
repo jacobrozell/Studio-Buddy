@@ -19,4 +19,28 @@ final class LandscapeSmokeUITests: StudioBuddyUITestCase {
         tapTab(named: "Projects", in: app)
         XCTAssertTrue(app.staticTexts[Self.seededProjectTitle].waitForExistence(timeout: timeout))
     }
+
+    func testSongDetailAndPlayerInLandscape() {
+        let app = launchApp()
+        rotateToLandscapeLeft(app: app)
+
+        let song = app.staticTexts[Self.seededSongTitle].firstMatch
+        XCTAssertTrue(song.waitForExistence(timeout: timeout))
+        song.tap()
+
+        let play = app.buttons["song.play"].firstMatch
+        if play.waitForExistence(timeout: timeout) {
+            play.tap()
+        }
+        XCTAssertTrue(app.buttons["player.playPause"].waitForExistence(timeout: timeout))
+    }
+
+    func testProjectChartInLandscape() {
+        let app = launchApp()
+        rotateToLandscapeLeft(app: app)
+        tapTab(named: "Projects", in: app)
+        app.staticTexts[Self.seededProjectTitle].firstMatch.tap()
+        XCTAssertTrue(app.navigationBars[Self.seededProjectTitle].waitForExistence(timeout: timeout))
+        XCTAssertTrue(app.buttons["project.play"].waitForExistence(timeout: timeout))
+    }
 }

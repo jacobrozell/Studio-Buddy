@@ -1,10 +1,13 @@
 import SwiftUI
 import SwiftData
 
+// swiftlint:disable type_body_length
+
 /// Full detail for a single song: metadata, export prefix, version stack, sharing.
 struct SongDetailView: View {
     @Bindable var song: Song
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.marketingScene) private var marketingScene
     @Environment(AudioPlayer.self) private var audioPlayer
     @Query private var allSongs: [Song]
 
@@ -17,6 +20,8 @@ struct SongDetailView: View {
     @State private var songPendingDeleteAfterLastMix = false
     @State private var mixToEdit: Mix?
     @State private var showingCompare = false
+    @State private var showingMerge = false
+    @State private var duplicateImportMessage: String?
 
     var body: some View {
         List {
@@ -37,6 +42,7 @@ struct SongDetailView: View {
         }
         .navigationTitle(song.title)
         .navigationBarTitleDisplayMode(.inline)
+        .verticalTabBarClearance()
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
@@ -64,6 +70,11 @@ struct SongDetailView: View {
                         .disabled(isDetecting)
                         .accessibilityIdentifier(A11yID.Song.analyzeLoudness)
                     }
+                    if !mergeCandidates.isEmpty {
+                        Button("Merge Another Song into This…", systemImage: "arrow.triangle.merge") {
+                            showingMerge = true
+                        }
+                    }
                     ShareLink(item: shareText) {
                         Label("Share Text", systemImage: "square.and.arrow.up")
                     }
@@ -81,9 +92,16 @@ struct SongDetailView: View {
                 MixEditorView(mix: mix)
             }
         }
-        .audioImporter(isPresented: $showingImporter) { fileName, duration, sourceBasename in
-            addMix(fileName: fileName, duration: duration, sourceBasename: sourceBasename)
-        }
+        .audioImporter(
+            isPresented: $showingImporter,
+            existingMixes: { allSongs.flatMap(\.mixes) },
+            onDuplicate: { songTitle in
+                duplicateImportMessage = "This file is already in your library as \"\(songTitle)\"."
+            },
+            onImport: { fileName, duration, sourceBasename in
+                addMix(fileName: fileName, duration: duration, sourceBasename: sourceBasename)
+            }
+        )
         .sheet(isPresented: $showingShareCard) {
             ShareCardSheet(content: .song(song))
         }
@@ -94,6 +112,25 @@ struct SongDetailView: View {
         }
         .sheet(isPresented: $showingCompare) {
             VersionCompareView(song: song)
+        }
+        .sheet(isPresented: $showingMerge) {
+            MergeSongsSheet(
+                destination: song,
+                candidates: mergeCandidates,
+                onMerge: mergeSourceSong
+            )
+        }
+        .onAppear { applyMarketingSceneIfNeeded() }
+        .alert(
+            "Already in library",
+            isPresented: Binding(
+                get: { duplicateImportMessage != nil },
+                set: { if !$0 { duplicateImportMessage = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) { duplicateImportMessage = nil }
+        } message: {
+            Text(duplicateImportMessage ?? "")
         }
         .overlay(alignment: .bottom) {
             if isDetecting {
@@ -353,4 +390,45 @@ struct SongDetailView: View {
             set: { if !$0 { mixToEdit = nil } }
         )
     }
+
+    private var mergeCandidates: [Song] {
+        allSongs
+            .filter { $0.id != song.id }
+            .sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
+    }
+
+    private func mergeSourceSong(_ source: Song) {
+        let movedCount = source.mixes.count
+        SongCatalogOrganizer.mergeSong(source, into: song, context: modelContext)
+        try? modelContext.save()
+        Haptics.tap()
+        let bucket: String
+        switch movedCount {
+        case 1: bucket = "1"
+        case 2...3: bucket = "2-3"
+        default: bucket = "4+"
+        }
+        AppLog.shared.info(
+            .importFlow,
+            eventName: "songs_merged",
+            message: "Merged songs",
+            metadata: ["count": bucket]
+        )
+    }
+
+    private func applyMarketingSceneIfNeeded() {
+        guard let marketingScene else { return }
+        switch marketingScene {
+        case .shareCard:
+            showingShareCard = true
+        case .player:
+            if let mix = song.primaryMix {
+                audioPlayer.play(mix)
+            }
+        case .library, .songDetail, .project:
+            break
+        }
+    }
 }
+
+// swiftlint:enable type_body_length

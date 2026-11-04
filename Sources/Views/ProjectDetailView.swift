@@ -15,6 +15,9 @@ struct ProjectDetailView: View {
     @State private var pendingSuggestedIDs: [UUID]?
     @State private var pendingOrderMoves: [OrderMoveChange] = []
     @State private var pendingSuggestedTitles: [String] = []
+    @State private var orderUndoSnapshot: ProjectTrackOrder.Snapshot?
+    @State private var showOrderUndo = false
+    @AppStorage(ProjectPlaybackGap.storageKey) private var playbackGapSeconds = ProjectPlaybackGap.short.rawValue
 
     var body: some View {
         List {
@@ -73,6 +76,21 @@ struct ProjectDetailView: View {
                 onApply: applySuggestedOrder
             )
         }
+        .overlay(alignment: .bottom) {
+            if showOrderUndo {
+                HStack {
+                    Text("Order updated")
+                    Spacer()
+                    Button("Undo") { undoSuggestedOrder() }
+                        .accessibilityLabel("Undo suggest order")
+                }
+                .font(.subheadline.weight(.semibold))
+                .padding()
+                .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
+                .padding()
+            }
+        }
+        .verticalTabBarClearance()
     }
 
     private var suggestOrderPreviewPresented: Binding<Bool> {
@@ -122,6 +140,13 @@ struct ProjectDetailView: View {
                 .foregroundStyle(project.isFullyReleased ? .green : .secondary)
                 .accessibilityIdentifier(A11yID.Project.releaseProgress)
             }
+
+            Picker("Playback gap", selection: $playbackGapSeconds) {
+                ForEach(ProjectPlaybackGap.allCases) { gap in
+                    Text(gap.label).tag(gap.rawValue)
+                }
+            }
+            .accessibilityLabel("Gap between tracks when playing in order")
         }
     }
 
@@ -252,6 +277,7 @@ struct ProjectDetailView: View {
 
     private func applySuggestedOrder() {
         guard let suggestedIDs = pendingSuggestedIDs else { return }
+        orderUndoSnapshot = ProjectTrackOrder.snapshot(from: orderedTracks)
         let byID = Dictionary(uniqueKeysWithValues: orderedTracks.map { ($0.id, $0) })
         let reordered = suggestedIDs.compactMap { byID[$0] }
         withAnimation {
@@ -259,6 +285,20 @@ struct ProjectDetailView: View {
         }
         Haptics.success()
         clearSuggestOrderPreview()
+        showOrderUndo = true
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(5))
+            showOrderUndo = false
+            orderUndoSnapshot = nil
+        }
+    }
+
+    private func undoSuggestedOrder() {
+        guard let snapshot = orderUndoSnapshot else { return }
+        ProjectTrackOrder.restore(snapshot, on: orderedTracks)
+        showOrderUndo = false
+        orderUndoSnapshot = nil
+        Haptics.tap()
     }
 
     private func clearSuggestOrderPreview() {

@@ -1,5 +1,6 @@
 import Foundation
 import AVFoundation
+import CryptoKit
 
 /// Manages on-disk storage of imported audio files. Files live in a dedicated
 /// `Audio` subdirectory of the app's Documents folder and are referenced by
@@ -19,6 +20,17 @@ struct ImportedAudio: Sendable {
     let sourceBasename: String
 }
 
+enum AudioStorageError: LocalizedError {
+    case duplicateInLibrary(songTitle: String)
+
+    var errorDescription: String? {
+        switch self {
+        case let .duplicateInLibrary(songTitle):
+            return "This file is already in your library as \"\(songTitle)\"."
+        }
+    }
+}
+
 enum AudioStorage {
     /// Directory where imported audio is copied. Created lazily on first access.
     static var audioDirectory: URL {
@@ -33,8 +45,41 @@ enum AudioStorage {
     /// Copies a user-picked file into the audio directory under a unique name.
     /// - Parameter sourceURL: a security-scoped URL from the document picker.
     /// - Returns: the stored filename (relative to `audioDirectory`).
+    static func contentDigest(of url: URL) throws -> SHA256.Digest {
+        let needsStop = url.startAccessingSecurityScopedResource()
+        defer { if needsStop { url.stopAccessingSecurityScopedResource() } }
+        let data = try Data(contentsOf: url, options: [.mappedIfSafe])
+        return SHA256.hash(data: data)
+    }
+
+    static func contentDigest(ofStoredFile fileName: String) throws -> SHA256.Digest {
+        let url = audioDirectory.appendingPathComponent(fileName)
+        let data = try Data(contentsOf: url, options: [.mappedIfSafe])
+        return SHA256.hash(data: data)
+    }
+
+    @MainActor
+    static func existingSongTitleForDuplicate(
+        of sourceURL: URL,
+        existingMixes: [Mix]
+    ) -> String? {
+        guard let incoming = try? contentDigest(of: sourceURL) else { return nil }
+        for mix in existingMixes {
+            guard let stored = try? contentDigest(ofStoredFile: mix.fileName),
+                  stored == incoming,
+                  let title = mix.song?.title else { continue }
+            return title
+        }
+        return nil
+    }
+
     @discardableResult
-    static func importFile(from sourceURL: URL) throws -> String {
+    @MainActor
+    static func importFile(from sourceURL: URL, existingMixes: [Mix] = []) throws -> String {
+        if let songTitle = existingSongTitleForDuplicate(of: sourceURL, existingMixes: existingMixes) {
+            throw AudioStorageError.duplicateInLibrary(songTitle: songTitle)
+        }
+
         let needsStop = sourceURL.startAccessingSecurityScopedResource()
         defer { if needsStop { sourceURL.stopAccessingSecurityScopedResource() } }
 
@@ -59,9 +104,10 @@ enum AudioStorage {
     /// title/artist tags in one pass. Used by the import-first Library flow so a
     /// song can be created with sensible defaults already filled in.
     /// - Parameter sourceURL: a security-scoped URL from the document picker.
-    static func importAudio(from sourceURL: URL) async throws -> ImportedAudio {
+    @MainActor
+    static func importAudio(from sourceURL: URL, existingMixes: [Mix] = []) async throws -> ImportedAudio {
         let originalName = sourceURL.deletingPathExtension().lastPathComponent
-        let fileName = try importFile(from: sourceURL)
+        let fileName = try importFile(from: sourceURL, existingMixes: existingMixes)
         return try await metadata(forStoredFile: fileName, originalName: originalName)
     }
 

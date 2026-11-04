@@ -26,6 +26,9 @@ enum A11yID {
         static let releaseLinks = "song.releaseLinks"
         static let exportAudiogram = "song.exportAudiogram"
         static let analyzeLoudness = "song.analyzeLoudness"
+        static let mergeSheet = "song.mergeSheet"
+        static let mergePreview = "song.mergePreview"
+        static let mergeConfirm = "song.mergeConfirm"
     }
     enum Player {
         static let bar = "player.bar"

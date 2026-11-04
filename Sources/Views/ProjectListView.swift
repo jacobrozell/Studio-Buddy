@@ -4,6 +4,7 @@ import SwiftData
 /// Lists all of the user's release projects (albums, EPs, etc.). Uses split view on iPad.
 struct ProjectListView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.marketingScene) private var marketingScene
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Query(sort: \Project.dateCreated, order: .reverse) private var projects: [Project]
@@ -41,6 +42,12 @@ struct ProjectListView: View {
             guard let selectedProjectID, !ids.contains(selectedProjectID) else { return }
             self.selectedProjectID = nil
         }
+        .onAppear {
+            if marketingScene == .project, selectedProjectID == nil {
+                selectedProjectID = projects.first?.id
+            }
+        }
+        .verticalTabBarClearance()
     }
 
     private var usesSplitLayout: Bool {

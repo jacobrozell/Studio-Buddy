@@ -14,6 +14,14 @@ enum Brand {
         light: UIColor(red: 0.96, green: 0.95, blue: 0.92, alpha: 1),
         dark: UIColor(red: 0.04, green: 0.05, blue: 0.06, alpha: 1)
     )
+
+    static var uiBackground: UIColor {
+        UIColor { traits in
+            traits.userInterfaceStyle == .dark
+                ? UIColor(red: 0.04, green: 0.05, blue: 0.06, alpha: 1)
+                : UIColor(red: 0.96, green: 0.95, blue: 0.92, alpha: 1)
+        }
+    }
     static let backgroundSecondary = dynamic(
         light: UIColor(red: 0.92, green: 0.90, blue: 0.86, alpha: 1),
         dark: UIColor(red: 0.06, green: 0.07, blue: 0.09, alpha: 1)

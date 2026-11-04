@@ -122,4 +122,53 @@ struct SongCatalogOrganizerTests {
         let remaining = try context.fetch(FetchDescriptor<Song>())
         #expect(remaining.count == 1)
     }
+
+    @Test("Keeps destination primary when merging")
+    @MainActor
+    func keepsDestinationPrimary() throws {
+        let container = try ModelContainerFactory.makeContainer(mode: .inMemory)
+        let context = container.mainContext
+
+        let destination = Song(title: "Night Drive")
+        let destMix = Mix(name: "Rough", fileName: "a.m4a", isPrimary: true, role: .rough)
+        destMix.song = destination
+        destination.mixes = [destMix]
+
+        let source = Song(title: "Night Drive Demo")
+        let sourceMix = Mix(name: "Master", fileName: "b.m4a", role: .master)
+        sourceMix.song = source
+        source.mixes = [sourceMix]
+
+        context.insert(destination)
+        context.insert(source)
+
+        SongCatalogOrganizer.mergeSong(source, into: destination, context: context)
+
+        #expect(destination.mixes.count == 2)
+        #expect(destination.primaryMix?.id == destMix.id)
+    }
+
+    @Test("Promotes source master when destination has no master")
+    @MainActor
+    func promotesSourceFinalRoleMix() throws {
+        let container = try ModelContainerFactory.makeContainer(mode: .inMemory)
+        let context = container.mainContext
+
+        let destination = Song(title: "Night Drive")
+        let destMix = Mix(name: "Rough", fileName: "a.m4a", isPrimary: false, role: .rough)
+        destMix.song = destination
+        destination.mixes = [destMix]
+
+        let source = Song(title: "Night Drive Demo")
+        let sourceMix = Mix(name: "Master", fileName: "b.m4a", role: .master)
+        sourceMix.song = source
+        source.mixes = [sourceMix]
+
+        context.insert(destination)
+        context.insert(source)
+
+        SongCatalogOrganizer.mergeSong(source, into: destination, context: context)
+
+        #expect(destination.primaryMix?.id == sourceMix.id)
+    }
 }

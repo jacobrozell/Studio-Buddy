@@ -52,6 +52,26 @@ enum MusicalKey: String, Codable, CaseIterable, Identifiable, Sendable {
         return "\(code.number)\(code.isMajor ? "B" : "A")"
     }
 
+    /// Camelot-compatible keys for harmonic mixing (same code, ±1 step, relative major/minor).
+    static func harmonicallyCompatible(with key: MusicalKey) -> Set<MusicalKey> {
+        guard let anchor = key.camelot else {
+            return Set(allCases)
+        }
+        var result: Set<MusicalKey> = [key, .unknown]
+        for candidate in allCases where candidate != .unknown {
+            guard let code = candidate.camelot else { continue }
+            if code.number == anchor.number {
+                result.insert(candidate)
+            }
+            let previous = code.number == 1 ? 12 : code.number - 1
+            let next = code.number == 12 ? 1 : code.number + 1
+            if code.isMajor == anchor.isMajor, code.number == previous || code.number == next {
+                result.insert(candidate)
+            }
+        }
+        return result
+    }
+
     /// Builds a key from a chromatic pitch class (0 = C, 1 = C♯/D♭, … 11 = B)
     /// and a mode. Used by the audio analyzer to turn a detected tonic into a
     /// concrete `MusicalKey`.

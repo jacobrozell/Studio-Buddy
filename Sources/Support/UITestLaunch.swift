@@ -5,6 +5,10 @@ enum UITestLaunch {
     static let resetArgument = "-ui_test_reset"
     static let skipOnboardingArgument = "-ui_test_skip_onboarding"
     static let seedCatalogArgument = "-ui_test_seed_catalog"
+    static let openMarketingSongDetail = "marketing_song_detail"
+    static let openMarketingPlayer = "marketing_player"
+    static let openMarketingProject = "marketing_project"
+    static let openMarketingShareCard = "marketing_share_card"
 
     static var isUITestReset: Bool {
         ProcessInfo.processInfo.arguments.contains(resetArgument)

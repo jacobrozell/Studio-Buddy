@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import SwiftUI
 import SwiftData
 
@@ -42,6 +43,7 @@ struct LibraryView: View {
     @State private var pendingImportPlan: ImportPlan?
     @State private var pendingImportFailures: [String] = []
     @State private var selectedSongID: UUID?
+    @Environment(\.marketingScene) private var marketingScene
 
     var body: some View {
         Group {
@@ -75,11 +77,17 @@ struct LibraryView: View {
                 onConfirm: commitImportPlan
             )
         }
-        .songImporter(isPresented: $showingImporter, importTask: $importTask) { current, total in
-            importProgress = (current, total)
-        } onImport: { results, failures in
-            finishImport(results: results, failures: failures)
-        }
+        .songImporter(
+            isPresented: $showingImporter,
+            importTask: $importTask,
+            existingMixes: { songs.flatMap(\.mixes) },
+            onProgress: { current, total in
+                importProgress = (current, total)
+            },
+            onImport: { results, failures in
+                finishImport(results: results, failures: failures)
+            }
+        )
         .overlay(alignment: .bottom) {
             if !lastImportMessage.isEmpty {
                 ImportSuccessBannerView(message: lastImportMessage) {
@@ -106,6 +114,8 @@ struct LibraryView: View {
         } message: {
             Text(LibraryImportActions.importFailureMessage(importFailures))
         }
+        .verticalTabBarClearance()
+        .onAppear(perform: applyMarketingLibraryScene)
         .onChange(of: filteredSongIDs) { _, ids in
             guard let selectedSongID, !ids.contains(selectedSongID) else { return }
             self.selectedSongID = nil
@@ -473,6 +483,18 @@ extension LibraryView {
 
     private var importFailureAlertPresented: Binding<Bool> {
         Binding(get: { !importFailures.isEmpty }, set: { if !$0 { importFailures = [] } })
+    }
+
+    private func applyMarketingLibraryScene() {
+        guard let marketingScene else { return }
+        switch marketingScene {
+        case .songDetail, .player, .shareCard:
+            if selectedSongID == nil {
+                selectedSongID = songs.first?.id
+            }
+        case .library, .project:
+            break
+        }
     }
 
     private func resetFilters() {

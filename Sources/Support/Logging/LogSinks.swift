@@ -1,3 +1,4 @@
+import FirebaseAnalytics
 import Foundation
 import os
 
@@ -31,14 +32,17 @@ struct ConsoleLogSink: LogSink {
     }
 }
 
-/// Allowlisted, privacy-safe analytics events. Remote sink is a no-op until Firebase is wired.
+/// Allowlisted, privacy-safe analytics events routed to Firebase Analytics when configured.
 struct AnalyticsLogSink: LogSink {
     func write(_ record: LogRecord) {
-        guard FeatureFlags.analyticsEnabled else { return }
         guard record.level >= .info else { return }
-        guard AnalyticsEventAllowlist.allowed(record.eventName) else { return }
-        // Future: FirebaseAnalyticsLogSink adapter (see specs/PlatformParity.md).
-        _ = (record.eventName, record.message, record.metadata)
+        guard FirebaseBootstrap.isAnalyticsCollectionEnabled || FeatureFlags.analyticsEnabled else { return }
+        guard let parameters = StudioBuddyAnalyticsMapping.firebaseParameters(
+            eventName: record.eventName,
+            category: record.category,
+            metadata: record.metadata
+        ) else { return }
+        Analytics.logEvent(record.eventName, parameters: parameters)
     }
 }
 
@@ -52,7 +56,8 @@ enum AnalyticsEventAllowlist {
         "main_tab_presented",
         "song_imported",
         "project_created",
-        "share_card_exported"
+        "share_card_exported",
+        "songs_merged"
     ]
 }
 

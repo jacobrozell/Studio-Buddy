@@ -82,12 +82,32 @@ enum SongCatalogOrganizer {
     }
 
     static func mergeSong(_ source: Song, into destination: Song, context: ModelContext) {
+        guard source.id != destination.id else { return }
+
+        let preservedPrimaryID = destination.mixes.first(where: \.isPrimary)?.id
+        let destinationHasFinalRole = destination.mixes.contains { $0.role == .master }
+        let sourceFinalRoleMix = source.mixes.first { $0.role == .master }
+
         let mixesToMove = source.mixes
         for (index, mix) in mixesToMove.enumerated() {
             mix.isPrimary = false
             mix.sortOrder = destination.mixes.count + index
             mix.song = destination
         }
+
+        if let preservedPrimaryID,
+           destination.mixes.contains(where: { $0.id == preservedPrimaryID }) {
+            for mix in destination.mixes {
+                mix.isPrimary = mix.id == preservedPrimaryID
+            }
+        } else if !destinationHasFinalRole, let sourceFinalRoleMix {
+            for mix in destination.mixes {
+                mix.isPrimary = mix.id == sourceFinalRoleMix.id
+            }
+        } else if destination.primaryMix == nil, let first = destination.mixes.first {
+            first.isPrimary = true
+        }
+
         if destination.exportPrefix.isEmpty, !source.exportPrefix.isEmpty {
             destination.exportPrefix = source.exportPrefix
         }

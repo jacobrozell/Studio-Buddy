@@ -14,6 +14,6 @@ Build guide: [`../agent-build-checklist.md`](../agent-build-checklist.md) · Roa
 
 ## Pre-submit gates
 
-- [ ] **SwiftLint / CI green** — unit tests on push
+- [x] **SwiftLint / CI green** — unit tests on push (Firebase SPM + schema V1; run `verify-local.sh` on device Mac)
 - [ ] **Release-surface audit** — only shipped features in listing copy
 - [ ] **Version-aware import** — compare UI smoke on device

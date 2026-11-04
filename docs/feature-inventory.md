@@ -50,6 +50,9 @@ Status legend: ✅ shipped · 🟡 partial · 🧪 unverified · ⛔ not started
 | Platform | Release-surface gating | ✅ | ✅ | `ReleaseSurface` |
 | Platform | Accessibility (engineering pass) | ✅ | ✅ | `StudioBuddyUIAccessibility` (4 tests) |
 | Platform | Localization | 🟡 | ✅ | `L10n` + `Localizable.xcstrings` + parity test; most UI still hard-coded |
+| Platform | Firebase Analytics + Crashlytics | ✅ | 🧪 | `AppDelegate`, `FirebaseBootstrap`, allowlisted `AppLog` |
+| Platform | Open In audio (mp3/wav/m4a/aiff) | ✅ | 🧪 | `OpenInAudioImport`, `Info.plist` document types |
+| Platform | Merge duplicate songs | ✅ | 🧪 | `MergeSongsSheet`, `SongCatalogOrganizer.mergeSong` |
 | Platform | iCloud sync | ⛔ | — | — |
 | Platform | Onboarding / first-run | ✅ | ✅ | `OnboardingView`, `RootView` |
 | Platform | Repository layer / DI container | 🟡 | ✅ | `SongRepository`, `ProjectRepository`, `AppDependencies` |
