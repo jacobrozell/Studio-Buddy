@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+export HOMEBREW_NO_AUTO_UPDATE=1
+export HOMEBREW_NO_ENV_HINTS=1
+
 root="$(cd "$(dirname "$0")/.." && pwd)"
 example="$root/GoogleService-Info.plist.example"
 dest="$root/GoogleService-Info.plist"
@@ -29,5 +32,16 @@ dest.write_bytes(data)
 print(f"Wrote GoogleService-Info.plist ({len(data)} bytes)")
 PY
 
+brew install xcodegen
 (cd "$root" && xcodegen generate)
 echo "Generated Xcode project from project.yml"
+
+resolved_src="$root/ci/Package.resolved"
+resolved_dest="$root/StudioBuddy.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved"
+if [ ! -f "$resolved_src" ]; then
+  echo "error: ci/Package.resolved is missing" >&2
+  exit 1
+fi
+mkdir -p "$(dirname "$resolved_dest")"
+cp "$resolved_src" "$resolved_dest"
+echo "Installed Package.resolved"

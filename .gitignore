@@ -10,6 +10,7 @@ build/
 # Swift Package Manager
 Packages/
 Package.resolved
+!ci/Package.resolved
 .swiftpm/
 
 # macOS
