@@ -17,7 +17,7 @@ enum MarketingLaunch {
     }
 
     static var scene: Scene? {
-        Scene.allCases.first { ProcessInfo.processInfo.arguments.contains($0.rawValue) }
+        Scene.allCases.last { ProcessInfo.processInfo.arguments.contains($0.rawValue) }
     }
 }
 

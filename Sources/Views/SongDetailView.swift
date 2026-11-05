@@ -22,6 +22,7 @@ struct SongDetailView: View {
     @State private var showingCompare = false
     @State private var showingMerge = false
     @State private var duplicateImportMessage: String?
+    @State private var showingMarketingPlayer = false
 
     var body: some View {
         List {
@@ -105,6 +106,9 @@ struct SongDetailView: View {
         )
         .sheet(isPresented: $showingShareCard) {
             ShareCardSheet(content: .song(song))
+        }
+        .sheet(isPresented: $showingMarketingPlayer) {
+            FullPlayerView()
         }
         .sheet(isPresented: $showingAudiogram) {
             if let mix = song.primaryMix {
@@ -251,12 +255,12 @@ struct SongDetailView: View {
                             Haptics.tap()
                             audioPlayer.play(mix)
                         } label: {
-                            Label(
-                                isPrimaryPlaying ? "Pause" : "Play",
-                                systemImage: isPrimaryPlaying ? "pause.fill" : "play.fill"
-                            )
+                            Image(systemName: isPrimaryPlaying ? "pause.fill" : "play.fill")
+                                .font(.title3)
+                                .frame(width: 44, height: 44)
                         }
                         .buttonStyle(.borderedProminent)
+                        .accessibilityLabel(isPrimaryPlaying ? "Pause" : "Play")
                         .accessibilityIdentifier(A11yID.Song.play)
                     }
                     StarRatingView(rating: $song.rating)
@@ -444,6 +448,7 @@ struct SongDetailView: View {
         case .player:
             if let mix = song.primaryMix {
                 audioPlayer.play(mix)
+                showingMarketingPlayer = true
             }
         case .library, .songDetail, .project:
             break
