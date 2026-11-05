@@ -19,6 +19,13 @@ struct SupportTests {
         #expect(ReleaseSurface.audioAnalysis)
     }
 
+    @Test("Stat speech uses singular for one")
+    func spokenCount() {
+        #expect(SpokenCount.phrase(1, singular: "song", plural: "songs") == "1 song")
+        #expect(SpokenCount.phrase(0, singular: "mix", plural: "mixes") == "0 mixes")
+        #expect(SpokenCount.phrase(2, singular: "project", plural: "projects") == "2 projects")
+    }
+
     @Test("External links are HTTPS")
     func linksAreSecure() {
         #expect(AppLinks.privacy.scheme == "https")

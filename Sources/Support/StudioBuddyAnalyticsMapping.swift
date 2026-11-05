@@ -1,27 +1,37 @@
 import Foundation
 
+struct StudioBuddyAnalyticsEvent: Equatable, Sendable {
+    let name: String
+    let parameters: [String: String]
+}
+
 enum StudioBuddyAnalyticsMapping {
+    /// GA4 recommended name for a cold start. Local event stays `app_launched`.
+    static let firebaseNameOverrides: [String: String] = [
+        "app_launched": "app_open"
+    ]
+
     private static let allowlistedParameterKeys: Set<String> = [
         "count",
         "tab",
-        "format"
+        "format",
+        "kind"
     ]
 
-    static func firebaseParameters(
-        eventName: String,
-        category: LogCategory,
-        metadata: [String: String]?
-    ) -> [String: Any]? {
-        guard AnalyticsEventAllowlist.allowed(eventName) else { return nil }
+    static func map(_ record: LogRecord, appVersion: String?) -> StudioBuddyAnalyticsEvent? {
+        guard record.level >= .info else { return nil }
+        guard AnalyticsEventAllowlist.allowed(record.eventName) else { return nil }
 
-        var parameters: [String: Any] = [:]
-        if let metadata {
-            for key in allowlistedParameterKeys {
-                guard let value = metadata[key], !value.isEmpty else { continue }
-                parameters[key] = String(value.prefix(100))
-            }
+        var parameters = FirebaseMetadataSanitizer.sanitize(
+            record.metadata ?? [:],
+            allowedKeys: allowlistedParameterKeys
+        )
+        parameters["log_category"] = record.category.rawValue
+        if let appVersion, !appVersion.isEmpty {
+            parameters["app_version"] = String(appVersion.prefix(100))
         }
-        parameters["log_category"] = category.rawValue
-        return parameters
+
+        let name = firebaseNameOverrides[record.eventName] ?? record.eventName
+        return StudioBuddyAnalyticsEvent(name: name, parameters: parameters)
     }
 }

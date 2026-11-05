@@ -36,6 +36,7 @@ struct MixEditorView: View {
                 }
             }
             .navigationTitle("Edit Version")
+            .studioNavigationBarBackground()
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

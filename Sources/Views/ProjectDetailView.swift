@@ -27,6 +27,7 @@ struct ProjectDetailView: View {
         }
         .navigationTitle(project.title)
         .navigationBarTitleDisplayMode(.inline)
+        .studioNavigationBarBackground()
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {

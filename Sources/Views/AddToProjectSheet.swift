@@ -47,6 +47,7 @@ struct AddToProjectSheet: View {
                 }
             }
             .navigationTitle("Add to Project")
+            .studioNavigationBarBackground()
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

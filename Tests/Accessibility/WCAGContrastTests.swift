@@ -36,9 +36,30 @@ struct WCAGContrastTests {
         }
     }
 
-    private func rgba(_ color: Color) -> WCAGContrastMath.RGB {
+    @Test("Body ink meets 4.5:1 on brand surfaces in light and dark")
+    func brandInkOnSurfaces() {
+        let pairs: [(Color, Color, String)] = [
+            (Brand.textPrimary, Brand.background, "primary on background"),
+            (Brand.textSecondary, Brand.background, "secondary on background"),
+            (Brand.textFaint, Brand.background, "faint on background"),
+            (Brand.textPrimary, Brand.surface, "primary on surface"),
+            (Brand.textSecondary, Brand.surface, "secondary on surface"),
+            (Brand.textFaint, Brand.surface, "faint on surface")
+        ]
+        for style in [UIUserInterfaceStyle.light, UIUserInterfaceStyle.dark] {
+            for (foreground, background, label) in pairs {
+                let ratio = WCAGContrastMath.contrastRatio(
+                    foreground: rgba(foreground, style: style),
+                    background: rgba(background, style: style)
+                )
+                #expect(ratio >= 4.5, "\(label) \(style.rawValue) ratio \(ratio)")
+            }
+        }
+    }
+
+    private func rgba(_ color: Color, style: UIUserInterfaceStyle = .light) -> WCAGContrastMath.RGB {
         #if canImport(UIKit)
-        let uiColor = UIColor(color)
+        let uiColor = UIColor(color).resolvedColor(with: UITraitCollection(userInterfaceStyle: style))
         var red: CGFloat = 0
         var green: CGFloat = 0
         var blue: CGFloat = 0

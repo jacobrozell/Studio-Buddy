@@ -33,6 +33,12 @@ enum LibraryImportActions {
         onPartialFailure: ([String]) -> Void
     ) {
         let outcome = SongImportService.execute(plan, into: modelContext)
+        guard outcome.saved else {
+            var messages = failures
+            messages.append("The catalog could not be saved.")
+            onPartialFailure(messages)
+            return
+        }
         var parts: [String] = []
         if outcome.newSongs > 0 {
             parts.append("\(outcome.newSongs) new song\(outcome.newSongs == 1 ? "" : "s")")

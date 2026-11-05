@@ -27,6 +27,7 @@ struct ImportResolutionSheet: View {
                 }
             }
             .navigationTitle("Import Review")
+            .studioNavigationBarBackground()
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

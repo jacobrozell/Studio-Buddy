@@ -35,6 +35,7 @@ struct ShareCardSheet: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .controlSize(.large)
+                    .simultaneousGesture(TapGesture().onEnded { logShare() })
                 } else {
                     ProgressView()
                         .frame(maxWidth: .infinity)
@@ -43,6 +44,7 @@ struct ShareCardSheet: View {
             }
             .padding()
             .navigationTitle("Share Card")
+            .studioNavigationBarBackground()
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -56,7 +58,25 @@ struct ShareCardSheet: View {
 
     private func render() {
         isRendering = true
-        renderedURL = ReleaseCardRenderer.renderPNG(content: content, format: format)
+        let url = ReleaseCardRenderer.renderPNG(content: content, format: format)
+        renderedURL = url
         isRendering = false
+        if url == nil {
+            AppLog.shared.error(
+                .ui,
+                eventName: "share_card_render_failed",
+                message: "Share card render failed.",
+                metadata: ["format": format.rawValue.lowercased()]
+            )
+        }
+    }
+
+    private func logShare() {
+        AppLog.shared.info(
+            .ui,
+            eventName: "share_card_exported",
+            message: "Share card shared.",
+            metadata: ["format": format.rawValue.lowercased()]
+        )
     }
 }

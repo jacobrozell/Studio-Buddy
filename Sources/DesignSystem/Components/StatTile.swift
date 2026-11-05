@@ -1,10 +1,18 @@
 import SwiftUI
 
+enum SpokenCount {
+    static func phrase(_ count: Int, singular: String, plural: String) -> String {
+        "\(count) \(count == 1 ? singular : plural)"
+    }
+}
+
 /// Compact stat tile for library and project summaries.
 struct StatTile: View {
     let value: String
     let label: String
     var systemImage: String?
+    /// Spoken form, so "1" + "Songs" is not read as "1 Songs".
+    var spokenLabel: String? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: DS.Spacing.xs) {
@@ -26,6 +34,6 @@ struct StatTile: View {
         .padding(DS.Spacing.md)
         .background(.thinMaterial, in: RoundedRectangle(cornerRadius: DS.Radius.md))
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(value) \(label)")
+        .accessibilityLabel(spokenLabel ?? "\(value) \(label)")
     }
 }

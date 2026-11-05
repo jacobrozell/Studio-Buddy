@@ -14,10 +14,11 @@ enum LibrarySort: String, CaseIterable, Identifiable {
 }
 
 /// The main library screen: a searchable, sortable, filterable list of every
-/// song the producer has imported. Uses split view on iPad regular width.
+/// song the producer has imported. One split view collapses on phones and when an iPad window is narrow.
 struct LibraryView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Query private var songs: [Song]
     @Query private var projects: [Project]
@@ -43,16 +44,12 @@ struct LibraryView: View {
     @State private var pendingImportPlan: ImportPlan?
     @State private var pendingImportFailures: [String] = []
     @State private var selectedSongID: UUID?
+    @State private var containerWidth: CGFloat = 0
     @Environment(\.marketingScene) private var marketingScene
 
     var body: some View {
-        Group {
-            if usesSplitLayout {
-                librarySplitView
-            } else {
-                libraryCompactView
-            }
-        }
+        librarySplitView
+            .onContainerWidthChange($containerWidth)
         .sheet(isPresented: $showingSettings) { SettingsView() }
         .sheet(isPresented: $showingNewSong) { SongEditorView(song: nil) }
         .sheet(isPresented: $showingFilters) {
@@ -123,11 +120,11 @@ struct LibraryView: View {
     }
 
     private var usesSplitLayout: Bool {
-        AdaptiveLayout.usesSplitNavigation(horizontalSizeClass)
+        AdaptiveLayout.usesSplitNavigation(horizontal: horizontalSizeClass, vertical: verticalSizeClass)
     }
 
     private var sidebarWidth: SplitColumnWidth {
-        AdaptiveLayout.splitColumnWidth(dynamicType: dynamicTypeSize)
+        AdaptiveLayout.splitColumnWidth(containerWidth: containerWidth, dynamicType: dynamicTypeSize)
     }
 
     private var selectedSong: Song? {
@@ -143,28 +140,18 @@ struct LibraryView: View {
 // MARK: - Catalog list & adaptive navigation
 
 extension LibraryView {
-    private var libraryCompactView: some View {
-        NavigationStack {
-            libraryCatalogList(splitSelection: false)
-                .navigationTitle("Library")
-                .searchable(text: $searchText, prompt: "Search songs, artists, genres, notes")
-                .toolbar { libraryToolbarContent }
-        }
-    }
-
     private var librarySplitView: some View {
         NavigationSplitView {
-            NavigationStack {
-                libraryCatalogList(splitSelection: true)
-                    .navigationTitle("Library")
-                    .searchable(text: $searchText, prompt: "Search songs, artists, genres, notes")
-                    .toolbar { libraryToolbarContent }
-            }
-            .navigationSplitViewColumnWidth(
-                min: sidebarWidth.min,
-                ideal: sidebarWidth.ideal,
-                max: sidebarWidth.max
-            )
+            libraryCatalogList
+                .navigationTitle("Library")
+                .studioNavigationBarBackground()
+                .searchable(text: $searchText, prompt: "Search songs, artists, genres, notes")
+                .toolbar { libraryToolbarContent }
+                .navigationSplitViewColumnWidth(
+                    min: sidebarWidth.min,
+                    ideal: sidebarWidth.ideal,
+                    max: sidebarWidth.max
+                )
         } detail: {
             if let selectedSong {
                 SongDetailView(song: selectedSong)
@@ -175,13 +162,16 @@ extension LibraryView {
                     Text("Choose a track from your library to view mixes, metadata, and share options.")
                 }
                 .adaptiveEmptyStateLayout()
+                .studioNavigationBarBackground()
                 .accessibilityIdentifier(A11yID.Split.selectSong)
             }
         }
+        .navigationSplitViewStyle(.balanced)
+        .environment(\.horizontalSizeClass, usesSplitLayout ? horizontalSizeClass : .compact)
     }
 
-    private func libraryCatalogList(splitSelection: Bool) -> some View {
-        List {
+    private var libraryCatalogList: some View {
+        List(selection: $selectedSongID) {
             if let progress = importProgress {
                 Section {
                     ImportProgressBannerView(
@@ -227,12 +217,12 @@ extension LibraryView {
                 ForEach(listSections) { section in
                     if section.title.isEmpty {
                         ForEach(section.songs) { song in
-                            songRow(song, splitSelection: splitSelection)
+                            songRow(song)
                         }
                     } else {
                         Section(section.title) {
                             ForEach(section.songs) { song in
-                                songRow(song, splitSelection: splitSelection)
+                                songRow(song)
                             }
                         }
                     }
@@ -242,43 +232,28 @@ extension LibraryView {
         .listStyle(.plain)
     }
 
-    @ViewBuilder
-    private func songRow(_ song: Song, splitSelection: Bool) -> some View {
-        Group {
-            if splitSelection {
-                Button {
-                    selectedSongID = song.id
-                } label: {
-                    SongRow(song: song)
+    private func songRow(_ song: Song) -> some View {
+        SongRow(song: song)
+            .tag(song.id)
+            .listSidebarSelection(isSelected: selectedSongID == song.id, enabled: usesSplitLayout)
+            .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                Button { toggleFavorite(song) } label: {
+                    Label(
+                        song.isFavorite ? "Unfavorite" : "Favorite",
+                        systemImage: song.isFavorite ? "star.slash" : "star.fill"
+                    )
                 }
-                .buttonStyle(.plain)
-                .listSidebarSelection(isSelected: selectedSongID == song.id, enabled: true)
-            } else {
-                NavigationLink {
-                    SongDetailView(song: song)
-                } label: {
-                    SongRow(song: song)
+                .tint(.yellow)
+            }
+            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                Button { songForProject = song } label: {
+                    Label("Add to Project", systemImage: "plus.square.on.square")
+                }
+                .tint(.accentColor)
+                Button(role: .destructive) { songPendingDelete = song } label: {
+                    Label("Delete", systemImage: "trash")
                 }
             }
-        }
-        .swipeActions(edge: .leading, allowsFullSwipe: true) {
-            Button { toggleFavorite(song) } label: {
-                Label(
-                    song.isFavorite ? "Unfavorite" : "Favorite",
-                    systemImage: song.isFavorite ? "star.slash" : "star.fill"
-                )
-            }
-            .tint(.yellow)
-        }
-        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-            Button { songForProject = song } label: {
-                Label("Add to Project", systemImage: "plus.square.on.square")
-            }
-            .tint(.accentColor)
-            Button(role: .destructive) { songPendingDelete = song } label: {
-                Label("Delete", systemImage: "trash")
-            }
-        }
     }
 
     private var sortMenu: some View {

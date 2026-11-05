@@ -1,11 +1,13 @@
 import SwiftUI
 import SwiftData
 
-/// Lists all of the user's release projects (albums, EPs, etc.). Uses split view on iPad.
+/// Lists all of the user's release projects (albums, EPs, etc.).
+/// One split view collapses on phones and when an iPad window is narrow.
 struct ProjectListView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.marketingScene) private var marketingScene
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Query(sort: \Project.dateCreated, order: .reverse) private var projects: [Project]
 
@@ -13,15 +15,11 @@ struct ProjectListView: View {
     @State private var showingSettings = false
     @State private var projectPendingDelete: Project?
     @State private var selectedProjectID: UUID?
+    @State private var containerWidth: CGFloat = 0
 
     var body: some View {
-        Group {
-            if usesSplitLayout {
-                projectSplitView
-            } else {
-                projectCompactView
-            }
-        }
+        projectSplitView
+            .onContainerWidthChange($containerWidth)
         .sheet(isPresented: $showingSettings) { SettingsView() }
         .sheet(isPresented: $showingNewProject) { ProjectEditorView(project: nil) }
         .confirmationDialog(
@@ -51,11 +49,11 @@ struct ProjectListView: View {
     }
 
     private var usesSplitLayout: Bool {
-        AdaptiveLayout.usesSplitNavigation(horizontalSizeClass)
+        AdaptiveLayout.usesSplitNavigation(horizontal: horizontalSizeClass, vertical: verticalSizeClass)
     }
 
     private var sidebarWidth: SplitColumnWidth {
-        AdaptiveLayout.splitColumnWidth(dynamicType: dynamicTypeSize)
+        AdaptiveLayout.splitColumnWidth(containerWidth: containerWidth, dynamicType: dynamicTypeSize)
     }
 
     private var selectedProject: Project? {
@@ -67,26 +65,17 @@ struct ProjectListView: View {
         Set(projects.map(\.id))
     }
 
-    private var projectCompactView: some View {
-        NavigationStack {
-            projectListContent(splitSelection: false)
-                .navigationTitle("Projects")
-                .toolbar { projectToolbarContent }
-        }
-    }
-
     private var projectSplitView: some View {
         NavigationSplitView {
-            NavigationStack {
-                projectListContent(splitSelection: true)
-                    .navigationTitle("Projects")
-                    .toolbar { projectToolbarContent }
-            }
-            .navigationSplitViewColumnWidth(
-                min: sidebarWidth.min,
-                ideal: sidebarWidth.ideal,
-                max: sidebarWidth.max
-            )
+            projectListContent
+                .navigationTitle("Projects")
+                .studioNavigationBarBackground()
+                .toolbar { projectToolbarContent }
+                .navigationSplitViewColumnWidth(
+                    min: sidebarWidth.min,
+                    ideal: sidebarWidth.ideal,
+                    max: sidebarWidth.max
+                )
         } detail: {
             if let selectedProject {
                 ProjectDetailView(project: selectedProject)
@@ -97,45 +86,33 @@ struct ProjectListView: View {
                     Text("Choose a release project to edit its running order and energy flow.")
                 }
                 .adaptiveEmptyStateLayout()
+                .studioNavigationBarBackground()
                 .accessibilityIdentifier(A11yID.Split.selectProject)
             }
         }
+        .navigationSplitViewStyle(.balanced)
+        .environment(\.horizontalSizeClass, usesSplitLayout ? horizontalSizeClass : .compact)
     }
 
     @ViewBuilder
-    private func projectListContent(splitSelection: Bool) -> some View {
-        Group {
-            if projects.isEmpty {
-                emptyState
-            } else {
-                List {
-                    ForEach(projects) { project in
-                        projectRow(project, splitSelection: splitSelection)
-                    }
+    private var projectListContent: some View {
+        if projects.isEmpty {
+            emptyState
+        } else {
+            List(selection: $selectedProjectID) {
+                ForEach(projects) { project in
+                    projectRow(project)
                 }
-                .listStyle(.plain)
             }
+            .listStyle(.plain)
         }
     }
 
-    @ViewBuilder
-    private func projectRow(_ project: Project, splitSelection: Bool) -> some View {
-        Group {
-            if splitSelection {
-                Button { selectedProjectID = project.id } label: {
-                    ProjectRow(project: project)
-                }
-                .buttonStyle(.plain)
-                .listSidebarSelection(isSelected: selectedProjectID == project.id, enabled: true)
-            } else {
-                NavigationLink {
-                    ProjectDetailView(project: project)
-                } label: {
-                    ProjectRow(project: project)
-                }
-            }
-        }
-        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+    private func projectRow(_ project: Project) -> some View {
+        ProjectRow(project: project)
+            .tag(project.id)
+            .listSidebarSelection(isSelected: selectedProjectID == project.id, enabled: usesSplitLayout)
+            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
             Button(role: .destructive) { projectPendingDelete = project } label: {
                 Label("Delete", systemImage: "trash")
             }

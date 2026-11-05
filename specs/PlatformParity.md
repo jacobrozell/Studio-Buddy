@@ -49,7 +49,7 @@ Adoption plan to bring Studio Buddy to the same engineering bar as **Dart Buddy*
 ## Phase 4 — Optional telemetry
 
 - `GoogleService-Info.plist.example` + `FirebaseBootstrap`
-- `FirebaseAnalyticsLogSink` adapter behind `FeatureFlags.analyticsEnabled`
+- `FirebaseAnalyticsLogSink` when `FirebaseBootstrap` allows collection
 - Update App Store privacy nutrition label if analytics ships
 
 ## Phase 5 — Polish & ship

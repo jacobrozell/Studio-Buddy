@@ -89,6 +89,7 @@ struct LibraryFiltersSheet: View {
                 }
             }
             .navigationTitle("Filters")
+            .studioNavigationBarBackground()
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {

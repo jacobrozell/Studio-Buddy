@@ -47,9 +47,10 @@ enum Brand {
         light: UIColor(red: 0.36, green: 0.34, blue: 0.31, alpha: 1),
         dark: UIColor(red: 0.60, green: 0.59, blue: 0.55, alpha: 1)
     )
+    /// Secondary-quiet ink. Dark enough for 4.5:1 on parchment and light enough for 4.5:1 on near-black.
     static let textFaint = dynamic(
-        light: UIColor(red: 0.54, green: 0.52, blue: 0.47, alpha: 1),
-        dark: UIColor(red: 0.40, green: 0.39, blue: 0.37, alpha: 1)
+        light: UIColor(red: 0.42, green: 0.39, blue: 0.35, alpha: 1),
+        dark: UIColor(red: 0.72, green: 0.70, blue: 0.66, alpha: 1)
     )
 
     /// Primary accent — 4.5:1 on dark background as large text / UI chrome.

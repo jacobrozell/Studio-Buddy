@@ -33,6 +33,7 @@ extension View {
     func brandFormChrome() -> some View {
         scrollContentBackground(.hidden)
             .background(Brand.background.ignoresSafeArea())
+            .studioNavigationBarBackground()
             .tint(Brand.accent)
     }
 

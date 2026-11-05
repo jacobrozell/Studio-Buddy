@@ -8,6 +8,8 @@ struct RootView: View {
     @Environment(\.appDependencies) private var appDependencies
     @Environment(AudioPlayer.self) private var audioPlayer
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     @AppStorage("appearance") private var appearance: AppAppearance = .system
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @State private var selectedTab = 0
@@ -23,6 +25,7 @@ struct RootView: View {
                     .environment(\.marketingScene, MarketingLaunch.scene)
             }
         }
+        .studioTabStyle(sidebar: usesSidebarTabs)
         .brandTabChrome()
         .studioWindowChrome()
         .safeAreaInset(edge: .bottom) {
@@ -36,6 +39,14 @@ struct RootView: View {
         .preferredColorScheme(appearance.colorScheme)
         .fullScreenCover(isPresented: showOnboarding) {
             OnboardingView { hasCompletedOnboarding = true }
+        }
+        .onChange(of: selectedTab) { _, tab in
+            AppLog.shared.info(
+                .ui,
+                eventName: "tab_selected",
+                message: "Tab selected.",
+                metadata: ["tab": tab == 0 ? "library" : "projects"]
+            )
         }
         .task {
             if UITestLaunch.shouldSkipOnboarding {
@@ -52,6 +63,10 @@ struct RootView: View {
                 selectedTab = 1
             }
         }
+    }
+
+    private var usesSidebarTabs: Bool {
+        AdaptiveLayout.usesSplitNavigation(horizontal: horizontalSizeClass, vertical: verticalSizeClass)
     }
 
     /// Imports bundled `Resources/*.mp3` when launched with `-seed_demo_tracks`

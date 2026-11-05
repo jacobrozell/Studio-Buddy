@@ -42,6 +42,7 @@ struct SongDetailView: View {
         }
         .navigationTitle(song.title)
         .navigationBarTitleDisplayMode(.inline)
+        .studioNavigationBarBackground()
         .verticalTabBarClearance()
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

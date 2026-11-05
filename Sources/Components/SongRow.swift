@@ -20,7 +20,7 @@ struct SongRow: View {
                         Image(systemName: "star.fill")
                             .font(.caption2)
                             .foregroundStyle(.yellow)
-                            .accessibilityLabel("Favorite")
+                            .accessibilityHidden(true)
                     }
                 }
                 HStack(spacing: 6) {

@@ -36,6 +36,7 @@ struct FullPlayerView: View {
             }
             .scrollBounceBehavior(.basedOnSize)
             .navigationBarTitleDisplayMode(.inline)
+            .studioNavigationBarBackground()
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") { dismiss() }

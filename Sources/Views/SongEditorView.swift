@@ -149,6 +149,7 @@ struct SongEditorView: View {
             .scrollDismissesKeyboard(.immediately)
             .brandFormChrome()
             .navigationTitle(isEditing ? "Edit Song" : "New Song")
+            .studioNavigationBarBackground()
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

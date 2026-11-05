@@ -37,6 +37,7 @@ struct AddTracksView: View {
                 }
             }
             .navigationTitle("Add Tracks")
+            .studioNavigationBarBackground()
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

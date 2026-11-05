@@ -34,6 +34,7 @@ struct ProjectEditorView: View {
                 }
             }
             .navigationTitle(isEditing ? "Edit Project" : "New Project")
+            .studioNavigationBarBackground()
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -67,6 +68,12 @@ struct ProjectEditorView: View {
             let new = Project(title: trimmed, subtitle: subtitle, kind: kind, notes: notes)
             modelContext.insert(new)
             onCreated?(new)
+            AppLog.shared.info(
+                .app,
+                eventName: "project_created",
+                message: "Project created.",
+                metadata: ["kind": kind.rawValue]
+            )
         }
         dismiss()
     }

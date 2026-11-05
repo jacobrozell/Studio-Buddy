@@ -94,6 +94,7 @@ struct AudiogramExportSheet: View {
             }
             .brandFormChrome()
             .navigationTitle("Audiogram")
+            .studioNavigationBarBackground()
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

@@ -121,6 +121,7 @@ struct OnboardingView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 .padding(.horizontal, compactHeight ? 20 : 32)
+                .frame(maxWidth: 640)
             }
             .padding(.vertical, compactHeight ? 8 : 16)
             .frame(maxWidth: .infinity)

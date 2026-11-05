@@ -15,6 +15,7 @@ struct CatalogExportShareSheet: View {
             .buttonStyle(.borderedProminent)
             .padding()
             .navigationTitle("Export Catalog")
+            .studioNavigationBarBackground()
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(L10n.done, action: onDismiss)

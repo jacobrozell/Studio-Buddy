@@ -34,15 +34,13 @@ struct ConsoleLogSink: LogSink {
 
 /// Allowlisted, privacy-safe analytics events routed to Firebase Analytics when configured.
 struct AnalyticsLogSink: LogSink {
+    var appVersion: String? = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+
     func write(_ record: LogRecord) {
-        guard record.level >= .info else { return }
-        guard FirebaseBootstrap.isAnalyticsCollectionEnabled || FeatureFlags.analyticsEnabled else { return }
-        guard let parameters = StudioBuddyAnalyticsMapping.firebaseParameters(
-            eventName: record.eventName,
-            category: record.category,
-            metadata: record.metadata
-        ) else { return }
-        Analytics.logEvent(record.eventName, parameters: parameters)
+        guard FirebaseBootstrap.shouldConfigure, FirebaseBootstrap.isAnalyticsCollectionEnabled else { return }
+        guard let event = StudioBuddyAnalyticsMapping.map(record, appVersion: appVersion) else { return }
+        let parameters = Dictionary(uniqueKeysWithValues: event.parameters.map { ($0.key, $0.value as Any) })
+        Analytics.logEvent(event.name, parameters: parameters)
     }
 }
 
@@ -54,10 +52,13 @@ enum AnalyticsEventAllowlist {
     private static let allowedEvents: Set<String> = [
         "app_launched",
         "main_tab_presented",
+        "tab_selected",
         "song_imported",
         "project_created",
         "share_card_exported",
-        "songs_merged"
+        "share_card_render_failed",
+        "songs_merged",
+        "catalog_save_failed"
     ]
 }
 
@@ -70,7 +71,11 @@ struct DefaultAppLogger: AppLogger {
 
     static func makeForCurrentBuild() -> DefaultAppLogger {
         DefaultAppLogger(
-            sink: CompositeLogSink(sinks: [ConsoleLogSink(), AnalyticsLogSink()])
+            sink: CompositeLogSink(sinks: [
+                ConsoleLogSink(),
+                AnalyticsLogSink(),
+                FirebaseCrashlyticsLogSink()
+            ])
         )
     }
 

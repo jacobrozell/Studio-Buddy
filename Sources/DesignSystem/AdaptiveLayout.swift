@@ -14,9 +14,14 @@ enum AdaptiveLayout {
         vertical == .compact
     }
 
-    /// iPad-style two-column navigation when horizontal space is regular.
-    static func usesSplitNavigation(_ horizontal: UserInterfaceSizeClass?) -> Bool {
-        horizontal == .regular
+    /// Sidebar and list-detail split only when both size classes are regular
+    /// (iPad, iPhone Duo inner display, a tall resizable window). iPhone Pro Max
+    /// landscape is regular width and compact height, so it keeps the phone stack.
+    static func usesSplitNavigation(
+        horizontal: UserInterfaceSizeClass?,
+        vertical: UserInterfaceSizeClass?
+    ) -> Bool {
+        horizontal == .regular && vertical == .regular
     }
 
     /// Extra bottom inset so content clears the tab bar and now-playing bar.
@@ -54,13 +59,24 @@ enum AdaptiveLayout {
         compactHeight ? min(scaled, 96) : min(scaled, 140)
     }
 
-    /// Sidebar column width for `NavigationSplitView` on iPad.
+    /// Sidebar column caps before the window width is known.
     static func splitColumnWidth(dynamicType: DynamicTypeSize) -> SplitColumnWidth {
         if dynamicType.isAccessibilitySize {
             SplitColumnWidth(min: 380, ideal: 420, max: 520)
         } else {
             SplitColumnWidth(min: 320, ideal: 380, max: 440)
         }
+    }
+
+    /// Sidebar width tracks the window so Stage Manager and iPad resize stay usable.
+    static func splitColumnWidth(containerWidth: CGFloat, dynamicType: DynamicTypeSize) -> SplitColumnWidth {
+        let caps = splitColumnWidth(dynamicType: dynamicType)
+        guard containerWidth > 1 else { return caps }
+
+        let minWidth = min(caps.min, max(240, containerWidth * 0.28))
+        let ideal = min(max(containerWidth * 0.34, minWidth), caps.max)
+        let maxWidth = min(max(containerWidth * 0.46, ideal), max(caps.max, ideal))
+        return SplitColumnWidth(min: minWidth, ideal: ideal, max: maxWidth)
     }
 }
 
@@ -83,7 +99,25 @@ private struct AdaptiveEmptyStateLayout: ViewModifier {
     }
 }
 
+private struct ContainerWidthPreference: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        let next = nextValue()
+        if next > 0 { value = next }
+    }
+}
+
 extension View {
+    /// Reports the view's width so split columns can follow iPad window resize.
+    func onContainerWidthChange(_ width: Binding<CGFloat>) -> some View {
+        background {
+            GeometryReader { proxy in
+                Color.clear.preference(key: ContainerWidthPreference.self, value: proxy.size.width)
+            }
+        }
+        .onPreferenceChange(ContainerWidthPreference.self) { width.wrappedValue = $0 }
+    }
+
     /// Scrollable empty states with tab-bar clearance for accessibility text sizes.
     func adaptiveEmptyStateLayout() -> some View {
         modifier(AdaptiveEmptyStateLayout())
@@ -98,14 +132,12 @@ extension View {
     /// Sidebar selection tint and VoiceOver selected state for split-view lists.
     @ViewBuilder
     func listSidebarSelection(isSelected: Bool, enabled: Bool) -> some View {
-        let selected = enabled && isSelected
-        Group {
-            if selected {
-                listRowBackground(Brand.accentMuted)
-            } else {
-                self
-            }
+        if enabled && isSelected {
+            self
+                .listRowBackground(Brand.accentMuted)
+                .accessibilityAddTraits(.isSelected)
+        } else {
+            self
         }
-        .accessibilityAddTraits(selected ? .isSelected : [])
     }
 }

@@ -32,6 +32,7 @@ struct MergeSongsSheet: View {
                 }
             }
             .navigationTitle("Merge into this song")
+            .studioNavigationBarBackground()
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

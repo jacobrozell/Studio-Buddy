@@ -32,6 +32,7 @@ struct VersionCompareView: View {
                 .padding()
             }
             .navigationTitle(L10n.compareTitle)
+            .studioNavigationBarBackground()
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

@@ -33,15 +33,17 @@ struct LibraryCategoryFilterBar: View {
                     Circle()
                         .fill(Color.accentColor)
                         .frame(width: 6, height: 6)
+                        .accessibilityHidden(true)
                 }
             }
             .font(.subheadline.weight(.medium))
             .padding(.horizontal, 14)
             .padding(.vertical, 7)
             .background(filtersAreActive ? Color.accentColor : Color(.secondarySystemBackground), in: Capsule())
-            .foregroundStyle(filtersAreActive ? .white : .primary)
+            .foregroundStyle(filtersAreActive ? Brand.textOnAccent : Brand.textPrimary)
         }
         .buttonStyle(.plain)
+        .minimumTapTarget()
         .accessibilityLabel(filtersAreActive ? "Filters, active" : "Filters")
         .accessibilityIdentifier(A11yID.Library.filtersButton)
     }
@@ -60,8 +62,10 @@ struct FilterChip: View {
                 .padding(.horizontal, 14)
                 .padding(.vertical, 7)
                 .background(isOn ? Color.accentColor : Color(.secondarySystemBackground), in: Capsule())
-                .foregroundStyle(isOn ? .white : .primary)
+                .foregroundStyle(isOn ? Brand.textOnAccent : Brand.textPrimary)
         }
         .buttonStyle(.plain)
+        .minimumTapTarget()
+        .accessibilityAddTraits(isOn ? .isSelected : [])
     }
 }

@@ -27,8 +27,9 @@ Recurring conventions so agents don't reintroduce fixed mistakes.
   the view *inside* the tab closure, not to `Tab` itself.
 
 ## Layout
-- Distinguish iPad from large-phone landscape with the device **idiom**, not
-  horizontal size class alone.
+- Split navigation and sidebar tabs only when **both** size classes are regular
+  (iPad, iPhone Duo inner display, a tall resizable window). Do not use
+  `userInterfaceIdiom` for chrome. iPhone landscape stays a phone stack.
 
 ## Migrations
 - Adding stored properties to `@Model`s relies on lightweight migration during

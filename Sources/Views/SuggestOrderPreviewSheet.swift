@@ -46,6 +46,7 @@ struct SuggestOrderPreviewSheet: View {
                 }
             }
             .navigationTitle("Suggest Order")
+            .studioNavigationBarBackground()
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

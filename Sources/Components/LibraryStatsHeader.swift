@@ -11,9 +11,24 @@ struct LibraryStatsHeader: View {
             columns: [GridItem(.flexible()), GridItem(.flexible())],
             spacing: DS.Spacing.sm
         ) {
-            StatTile(value: "\(songCount)", label: "Songs", systemImage: "music.note")
-            StatTile(value: "\(mixCount)", label: "Mixes", systemImage: "waveform")
-            StatTile(value: "\(projectCount)", label: "Projects", systemImage: "square.stack.3d.up")
+            StatTile(
+                value: "\(songCount)",
+                label: "Songs",
+                systemImage: "music.note",
+                spokenLabel: SpokenCount.phrase(songCount, singular: "song", plural: "songs")
+            )
+            StatTile(
+                value: "\(mixCount)",
+                label: "Mixes",
+                systemImage: "waveform",
+                spokenLabel: SpokenCount.phrase(mixCount, singular: "mix", plural: "mixes")
+            )
+            StatTile(
+                value: "\(projectCount)",
+                label: "Projects",
+                systemImage: "square.stack.3d.up",
+                spokenLabel: SpokenCount.phrase(projectCount, singular: "project", plural: "projects")
+            )
         }
     }
 }

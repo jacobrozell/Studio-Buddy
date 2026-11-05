@@ -8,21 +8,30 @@ core flows. Target: WCAG 2.1 AA.
 | # | Requirement | Status |
 |---|-------------|--------|
 | A1 | Icon-only controls have `accessibilityLabel` | 🟡 core controls done |
-| A2 | Interactive controls ≥ 44×44 pt | 🟡 star rating + transport use `minimumTapTarget()` |
+| A2 | Interactive controls ≥ 44×44 pt | 🟡 star rating, transport, and library filter chips use `minimumTapTarget()` |
 | A3 | Dynamic Type via system text styles; no clipping at AXXXL | 🟡 empty states scroll at AXXXL |
 | A4 | Reduce Motion respected for non-essential animation | ✅ `RootView`, onboarding |
 | A5 | Status not conveyed by color alone (label/symbol pairing) | ✅ badges/legend |
 | A6 | Decorative imagery hidden from VoiceOver | 🟡 player, song/project headers |
 | A7 | Canvas waveform exposed as an adjustable element | ✅ `FullPlayerView` |
-| A8 | Supported orientations documented | 🟡 landscape layouts in player, onboarding, chart |
+| A8 | Supported orientations documented | ✅ portrait and landscape; split only at regular width and height |
 | A9 | Accessibility statement linked from Settings | ✅ `AppLinks.accessibility` |
 | A10 | Automated contrast/label tests on tokens & key controls | 🟡 contrast + identifier contract tests |
 
 ## Supported orientations
 
-Portrait and landscape are enabled in `project.yml`. Landscape layouts on large
-phones vs iPad are **not yet verified** (distinguish with device idiom, not
-horizontal size class alone).
+Portrait and landscape are enabled in `project.yml`. iPad supports all four
+orientations and does not require full screen, so Stage Manager and Split View
+can resize the window.
+
+Layout follows size class, the same rule as Puzzle Buddy:
+
+| Signal | Behavior |
+|--------|----------|
+| Regular width and regular height | Sidebar tabs and a list–detail split (iPad, iPhone Duo inner display, a tall window). |
+| Anything else | Phone tab bar and a collapsed stack. iPhone landscape, including Pro Max, stays on this path. |
+
+One `NavigationSplitView` stays mounted, so resizing an iPad window or folding iPhone Duo keeps the selected song or project. The sidebar column width tracks the window. iPhone Duo paints the window and navigation bar with the brand background so the trailing status bar does not leave a white strip.
 
 ## Screen tracker
 

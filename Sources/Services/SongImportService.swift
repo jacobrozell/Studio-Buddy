@@ -4,6 +4,8 @@ import SwiftData
 struct ImportOutcome: Sendable, Equatable {
     let newSongs: Int
     let addedVersions: Int
+    /// False when SwiftData rejected the save and the new rows were discarded.
+    let saved: Bool
 }
 
 /// Creates songs and primary mixes from imported audio, then schedules background
@@ -89,10 +91,33 @@ enum SongImportService {
             }
         }
 
-        try? context.save()
+        do {
+            try context.save()
+        } catch {
+            let orphanedFiles = pending.map(\.fileURL)
+            context.rollback()
+            for url in orphanedFiles {
+                try? FileManager.default.removeItem(at: url)
+            }
+            AppLog.shared.error(
+                .persistence,
+                eventName: "catalog_save_failed",
+                message: "Catalog save failed."
+            )
+            return ImportOutcome(newSongs: 0, addedVersions: 0, saved: false)
+        }
+
+        if newSongs > 0 {
+            AppLog.shared.info(
+                .importFlow,
+                eventName: "song_imported",
+                message: "Songs imported.",
+                metadata: ["count": AnalyticsCountBucket.bucket(newSongs)]
+            )
+        }
 
         guard scheduleBackgroundWork else {
-            return ImportOutcome(newSongs: newSongs, addedVersions: addedVersions)
+            return ImportOutcome(newSongs: newSongs, addedVersions: addedVersions, saved: true)
         }
 
         for item in pending {
@@ -103,7 +128,7 @@ enum SongImportService {
             }
         }
 
-        return ImportOutcome(newSongs: newSongs, addedVersions: addedVersions)
+        return ImportOutcome(newSongs: newSongs, addedVersions: addedVersions, saved: true)
     }
 
     @MainActor
