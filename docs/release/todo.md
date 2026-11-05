@@ -10,7 +10,7 @@ Build guide: [`../agent-build-checklist.md`](../agent-build-checklist.md) · Roa
 - [ ] **VoiceOver + AXXXL** — library, song detail, full player
 - [ ] **GitHub Pages** — privacy + support URLs verified
 - [ ] **App Store Connect** — iPhone 6.7" and iPad 13" screenshots uploaded 2026-11-05. Privacy labels and Duo shots still open
-- [ ] **TestFlight upload** — build 5 archive started (Xcode Cloud run 5). What to Test notes still open
+- [ ] **TestFlight upload** — build 5 is ready for internal testing. What to Test notes still open
 
 ## Pre-submit gates
 
