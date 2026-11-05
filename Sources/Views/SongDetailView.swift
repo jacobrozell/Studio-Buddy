@@ -243,6 +243,7 @@ struct SongDetailView: View {
                     .accessibilityLabel("\(song.title), \(song.category.displayName)")
                 HStack {
                     CategoryBadge(category: song.category)
+                        .fixedSize()
                     if song.mixes.count > 1 {
                         Text("\(song.mixes.count) versions")
                             .font(.caption.weight(.medium))
