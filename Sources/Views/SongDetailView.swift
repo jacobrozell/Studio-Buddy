@@ -213,6 +213,11 @@ struct SongDetailView: View {
         }
     }
 
+    private var isPrimaryPlaying: Bool {
+        guard let mix = song.primaryMix else { return false }
+        return audioPlayer.isPlaying && audioPlayer.currentMix?.id == mix.id
+    }
+
     private var headerSection: some View {
         Section {
             VStack(spacing: 12) {
@@ -240,6 +245,20 @@ struct SongDetailView: View {
                             .foregroundStyle(.secondary)
                     }
                     Spacer()
+                    if song.primaryMix != nil {
+                        Button {
+                            guard let mix = song.primaryMix else { return }
+                            Haptics.tap()
+                            audioPlayer.play(mix)
+                        } label: {
+                            Label(
+                                isPrimaryPlaying ? "Pause" : "Play",
+                                systemImage: isPrimaryPlaying ? "pause.fill" : "play.fill"
+                            )
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .accessibilityIdentifier(A11yID.Song.play)
+                    }
                     StarRatingView(rating: $song.rating)
                 }
             }

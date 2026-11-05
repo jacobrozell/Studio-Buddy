@@ -52,6 +52,25 @@ class StudioBuddyUITestCase: XCTestCase {
         XCTAssertTrue(libraryTab.waitForExistence(timeout: timeout), "Main shell did not appear")
     }
 
+    func seededSong(in app: XCUIApplication) -> XCUIElement {
+        app.staticTexts.matching(
+            NSPredicate(format: "label BEGINSWITH %@", Self.seededSongTitle)
+        ).firstMatch
+    }
+
+    /// Library and song detail both expose `song.play`. Tap the one on screen.
+    func tapSeededPlay(in app: XCUIApplication) {
+        let query = app.buttons.matching(identifier: "song.play")
+        let deadline = Date().addingTimeInterval(timeout)
+        while Date() < deadline {
+            if let play = query.allElementsBoundByIndex.first(where: { $0.isHittable }) {
+                play.tap()
+                return
+            }
+            RunLoop.current.run(until: Date().addingTimeInterval(0.25))
+        }
+    }
+
     func tapTab(named name: String, in app: XCUIApplication) {
         let tabBarTab = app.tabBars.buttons[name]
         if tabBarTab.waitForExistence(timeout: 2) {

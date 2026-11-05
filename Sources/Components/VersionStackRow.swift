@@ -20,6 +20,7 @@ struct VersionStackRow: View {
             }
             .buttonStyle(.plain)
             .accessibilityLabel(isPlaying ? "Pause \(mix.displayName)" : "Play \(mix.displayName)")
+            .accessibilityIdentifier(A11yID.Song.play)
 
             VStack(alignment: .leading, spacing: 2) {
                 HStack(spacing: 6) {

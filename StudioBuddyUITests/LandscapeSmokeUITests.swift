@@ -6,7 +6,7 @@ final class LandscapeSmokeUITests: StudioBuddyUITestCase {
         rotateToLandscapeLeft(app: app)
 
         XCTAssertTrue(app.navigationBars["Library"].waitForExistence(timeout: timeout))
-        XCTAssertTrue(app.staticTexts[Self.seededSongTitle].waitForExistence(timeout: timeout))
+        XCTAssertTrue(seededSong(in: app).waitForExistence(timeout: timeout))
 
         let settings = app.buttons[Self.settingsButtonID]
         XCTAssertTrue(settings.waitForExistence(timeout: timeout))
@@ -24,14 +24,11 @@ final class LandscapeSmokeUITests: StudioBuddyUITestCase {
         let app = launchApp()
         rotateToLandscapeLeft(app: app)
 
-        let song = app.staticTexts[Self.seededSongTitle].firstMatch
+        let song = seededSong(in: app)
         XCTAssertTrue(song.waitForExistence(timeout: timeout))
         song.tap()
-
-        let play = app.buttons["song.play"].firstMatch
-        if play.waitForExistence(timeout: timeout) {
-            play.tap()
-        }
+        XCTAssertTrue(app.navigationBars[Self.seededSongTitle].waitForExistence(timeout: timeout))
+        tapSeededPlay(in: app)
         XCTAssertTrue(app.buttons["player.playPause"].waitForExistence(timeout: timeout))
     }
 

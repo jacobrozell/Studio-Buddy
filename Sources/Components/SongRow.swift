@@ -16,6 +16,8 @@ struct SongRow: View {
                     Text(song.title)
                         .font(.headline)
                         .lineLimit(dynamicTypeSize.isAccessibilitySize ? 2 : 1)
+                        .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                        .accessibilityLabel(rowAccessibilityLabel)
                     if song.isFavorite {
                         Image(systemName: "star.fill")
                             .font(.caption2)
@@ -35,16 +37,17 @@ struct SongRow: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .lineLimit(dynamicTypeSize.isAccessibilitySize ? 2 : 1)
+                .accessibilityHidden(true)
             }
             .layoutPriority(1)
 
             if !dynamicTypeSize.isAccessibilitySize {
                 trailingMeta
+                    .accessibilityHidden(true)
             }
         }
         .padding(.vertical, 4)
         .accessibilityElement(children: .contain)
-        .accessibilityLabel(rowAccessibilityLabel)
     }
 
     private var playButton: some View {

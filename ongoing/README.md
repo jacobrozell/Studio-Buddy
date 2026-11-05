@@ -17,7 +17,7 @@ Plans and projects **in implementation** — approved, specced, and actively bei
 |------|-----|--------|-------|
 | Pre-ship build checklist | [`docs/agent-build-checklist.md`](../docs/agent-build-checklist.md) | In progress | VoiceOver sign-off and release QA open |
 | Release layout and telemetry | [`docs/telemetry.md`](../docs/telemetry.md), [`specs/Accessibility.md`](../specs/Accessibility.md) | In progress | Analytics allowlist, Crashlytics non-fatals, landscape / iPad resize / iPhone Duo |
-| 1.0 review lanes | [`1.0-review-fixes.md`](1.0-review-fixes.md) | In progress | Bugbot, Security, Tests on the uncommitted tree |
+| 1.0 review lanes | [`1.0-review-fixes.md`](1.0-review-fixes.md) | Done | Player control and library hit target fixed |
 | Version stack merge UI | [`specs/VersionStack.md`](../specs/VersionStack.md) | Shipped | `MergeSongsSheet` + primary rules |
 | UX polish roadmap | [`ROADMAP.md`](../ROADMAP.md) | In progress | Version compare shipped; iCloud sync next |
 

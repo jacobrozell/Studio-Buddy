@@ -14,7 +14,7 @@ final class WCAGAccessibilityUITests: StudioBuddyUITestCase {
 
     func testSongDetailPassesAccessibilityAudits() {
         let app = launchApp()
-        let song = app.staticTexts[Self.seededSongTitle].firstMatch
+        let song = seededSong(in: app)
         XCTAssertTrue(song.waitForExistence(timeout: timeout))
         song.tap()
         XCTAssertTrue(app.navigationBars[Self.seededSongTitle].waitForExistence(timeout: timeout))
@@ -36,13 +36,11 @@ final class WCAGAccessibilityUITests: StudioBuddyUITestCase {
 
     func testFullPlayerPassesAccessibilityAudits() {
         let app = launchApp()
-        let song = app.staticTexts[Self.seededSongTitle].firstMatch
+        let song = seededSong(in: app)
         XCTAssertTrue(song.waitForExistence(timeout: timeout))
         song.tap()
-        let play = app.buttons["song.play"].firstMatch
-        if play.waitForExistence(timeout: timeout) {
-            play.tap()
-        }
+        XCTAssertTrue(app.navigationBars[Self.seededSongTitle].waitForExistence(timeout: timeout))
+        tapSeededPlay(in: app)
         XCTAssertTrue(app.buttons["player.playPause"].waitForExistence(timeout: timeout))
         runWCAGAudit(on: app, auditTypes: WCAGAccessibilityAuditProfile.nameRoleValue)
     }

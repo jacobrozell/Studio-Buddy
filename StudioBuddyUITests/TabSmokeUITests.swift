@@ -5,7 +5,7 @@ final class TabSmokeUITests: StudioBuddyUITestCase {
         let app = launchApp()
 
         XCTAssertTrue(app.navigationBars["Library"].waitForExistence(timeout: timeout))
-        XCTAssertTrue(app.staticTexts[Self.seededSongTitle].waitForExistence(timeout: timeout))
+        XCTAssertTrue(seededSong(in: app).waitForExistence(timeout: timeout))
 
         tapTab(named: "Projects", in: app)
         XCTAssertTrue(app.navigationBars["Projects"].waitForExistence(timeout: timeout))

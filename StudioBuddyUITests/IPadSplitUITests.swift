@@ -10,7 +10,7 @@ final class IPadSplitUITests: StudioBuddyUITestCase {
             app.descendants(matching: .any)[Self.splitSelectSongID].waitForExistence(timeout: timeout)
         )
 
-        let song = app.staticTexts[Self.seededSongTitle]
+        let song = seededSong(in: app)
         XCTAssertTrue(song.waitForExistence(timeout: timeout))
         song.tap()
 
